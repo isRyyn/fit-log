@@ -47,8 +47,7 @@ export default function App() {
 
       {/* Header */}
       <header className="app__header">
-        <span className="app__header-logo">⊕</span>
-        <span className="app__header-title">Fit Log</span>
+        <img src="/header-logo.png" alt="Fit Log" className="app__header-logo" />
         <button onClick={handleLogout} className="app__header-logout" title="Sign out">
           ⊗
         </button>

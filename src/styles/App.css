@@ -18,21 +18,10 @@
 }
 
 .app__header-logo {
-  width: 26px;
-  height: 26px;
-  background: var(--c-accent);
-  border-radius: 7px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  margin-right: 8px;
+  height: 40px;
   flex-shrink: 0;
-}
-
-.app__header-title {
-  font-weight: 600;
-  font-size: 15px;
+  object-fit: contain;
+  margin-right: auto;
 }
 
 .app__header-logout {
