@@ -20,7 +20,7 @@ export default function App() {
       {/* Header */}
       <header className="app__header">
         <span className="app__header-logo">⊕</span>
-        <span className="app__header-title">Workout Manager</span>
+        <span className="app__header-title">Fit Log</span>
         <span className="app__header-info">PWA · offline</span>
       </header>
 

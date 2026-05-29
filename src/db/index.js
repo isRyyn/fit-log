@@ -1,6 +1,6 @@
 import { openDB } from 'idb';
 
-const DB_NAME = 'workout-manager';
+const DB_NAME = 'fit-log';
 const DB_VERSION = 1;
 
 // ─── Open / migrate ───────────────────────────────────────────────────────────

@@ -9,7 +9,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icons/*.png'],
       manifest: {
-        name: 'Workout Manager',
+        name: 'Fit Log',
         short_name: 'Workouts',
         description: 'Track your daily workouts offline',
         theme_color: '#0f0f10',

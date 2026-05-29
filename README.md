@@ -1,4 +1,4 @@
-# Workout Manager — PWA (offline-first)
+# Fit Log — PWA (offline-first)
 
 A React PWA that runs entirely on your Android phone. No backend server.
 All workout data is stored in **IndexedDB** on-device. Optional **Google Drive** backup on demand.
