@@ -1,0 +1,82 @@
+.drive-sync-panel {
+  padding: 16px;
+  border-top: 1px solid var(--c-border);
+  margin-top: 8px;
+}
+
+.drive-sync-panel__title {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.drive-sync-panel__btn-primary {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--c-accent);
+  color: #0f0f10;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.drive-sync-panel__btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.drive-sync-panel__btn-row {
+  display: flex;
+  gap: 8px;
+}
+
+.drive-sync-panel__btn-secondary {
+  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--c-border2);
+  background: var(--c-surface2);
+  color: var(--c-muted);
+  font-size: 13px;
+  cursor: pointer;
+  flex: 1;
+}
+
+.drive-sync-panel__backup-btn {
+  flex: 1;
+}
+
+.drive-sync-panel__last-sync {
+  font-size: 12px;
+  color: var(--c-hint);
+}
+
+.drive-sync-panel__success {
+  background: var(--c-success-bg);
+  border: 1px solid rgba(93, 202, 165, 0.25);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+}
+
+.drive-sync-panel__success-text {
+  font-size: 13px;
+  color: var(--c-success);
+  font-weight: 500;
+}
+
+.drive-sync-panel__success-info {
+  font-size: 12px;
+  color: var(--c-hint);
+  margin-top: 3px;
+}
+
+.drive-sync-panel__error {
+  font-size: 13px;
+  color: var(--c-danger);
+  margin-top: 8px;
+}

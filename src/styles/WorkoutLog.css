@@ -1,0 +1,153 @@
+.workout-log {
+  padding: 0 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.workout-log__empty {
+  margin: 16px;
+  border: 1px dashed var(--c-border2);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 1rem;
+  text-align: center;
+  color: var(--c-hint);
+}
+
+.workout-log__empty-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.workout-log__empty-text {
+  font-size: 14px;
+}
+
+.workout-log__loading {
+  padding: 2rem;
+  text-align: center;
+  color: var(--c-hint);
+  font-size: 14px;
+}
+
+.workout-entry {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  padding: 12px 14px;
+}
+
+.workout-entry--deleting {
+  opacity: 0.4;
+  transition: opacity 0.2s;
+}
+
+.workout-entry__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.workout-entry__content {
+  flex: 1;
+}
+
+.workout-entry__title-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 7px;
+  flex-wrap: wrap;
+}
+
+.workout-entry__exercise {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--c-text);
+}
+
+.workout-entry__equipment {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-weight: 500;
+}
+
+.workout-entry__muscle-group {
+  font-size: 11px;
+  color: var(--c-hint);
+}
+
+.workout-entry__sets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: var(--sets-margin, 6px);
+}
+
+.workout-entry__set {
+  padding: 3px 9px;
+  background: var(--c-surface2);
+  border: 1px solid var(--c-border);
+  border-radius: 99px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--c-muted);
+}
+
+.workout-entry__notes {
+  font-size: 12px;
+  color: var(--c-muted);
+  font-style: italic;
+}
+
+.workout-entry__stats {
+  font-size: 12px;
+  color: var(--c-hint);
+  margin-top: 5px;
+}
+
+.workout-entry__actions {
+  display: flex;
+  gap: 4px;
+}
+
+.workout-entry__btn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--c-hint);
+  cursor: pointer;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.workout-entry__btn--edit::before {
+  content: '✎';
+  font-size: 14px;
+}
+
+.workout-entry__btn--edit:active {
+  background: var(--c-surface2);
+  color: var(--c-accent);
+}
+
+.workout-entry__btn--delete::before {
+  content: '✕';
+  font-size: 15px;
+}
+
+.workout-entry__btn--delete:active {
+  background: var(--c-danger-bg);
+  color: var(--c-danger);
+}
+
+.workout-entry__btn:disabled {
+  cursor: not-allowed;
+}

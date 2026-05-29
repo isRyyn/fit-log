@@ -1,0 +1,60 @@
+.date-picker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--c-border);
+}
+
+.date-picker__nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--c-border2);
+  background: var(--c-surface);
+  color: var(--c-muted);
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.date-picker__nav-btn:disabled {
+  opacity: 0.3;
+}
+
+.date-picker__input-wrapper {
+  flex: 1;
+  text-align: center;
+}
+
+.date-picker__input {
+  background: transparent;
+  border: none;
+  color: var(--c-text);
+  font-size: 16px;
+  font-weight: 500;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+}
+
+.date-picker__label {
+  font-size: 12px;
+  color: var(--c-muted);
+  margin-top: 1px;
+}
+
+.date-picker__today-btn {
+  padding: 6px 11px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--c-accent-border);
+  background: var(--c-accent-bg);
+  color: var(--c-accent);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+}
