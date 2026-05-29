@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { registerSW } from 'virtual:pwa-register';
+import { AuthProvider } from './hooks/useAuth.jsx';
 import App from './App.jsx';
 import './styles/global.css';
 
@@ -9,6 +10,8 @@ registerSW({ onNeedRefresh() {}, onOfflineReady() {} });
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </React.StrictMode>
 );

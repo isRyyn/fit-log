@@ -35,6 +35,21 @@
   font-size: 15px;
 }
 
+.app__header-logout {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+  color: var(--c-hint);
+  transition: color 0.2s ease;
+}
+
+.app__header-logout:hover {
+  color: var(--c-text);
+}
+
 .app__header-info {
   margin-left: auto;
   font-size: 10px;

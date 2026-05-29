@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
-import { WorkoutDB } from '../db/index.js';
+import { WorkoutDB } from '../db/firestore.js';
+import { useAuth } from './useAuth.jsx';
 
 const today = () => new Date().toISOString().split('T')[0];
 
 export function useWorkouts() {
+  const { user, isAuthenticated } = useAuth();
   const [date, setDate] = useState(today());
   const [workouts, setWorkouts] = useState([]);
   const [stats, setStats] = useState(null);
@@ -11,12 +13,16 @@ export function useWorkouts() {
   const [error, setError] = useState(null);
 
   const fetchAll = useCallback(async () => {
+    if (!isAuthenticated || !user) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
       const [w, s] = await Promise.all([
-        WorkoutDB.getByDate(date),
-        WorkoutDB.statsForDate(date),
+        WorkoutDB.getByDate(user.uid, date),
+        WorkoutDB.statsForDate(user.uid, date),
       ]);
       setWorkouts(w);
       setStats(s);
@@ -25,11 +31,13 @@ export function useWorkouts() {
     } finally {
       setLoading(false);
     }
-  }, [date]);
+  }, [date, user, isAuthenticated]);
 
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
   const addWorkout = useCallback(async (body) => {
+    if (!user) throw new Error('User not authenticated');
+    
     // Check if an exercise with the same name and equipment exists on the same day
     const existing = workouts.find(w => w.exercise === body.exercise && w.equipment === body.equipment);
     
@@ -50,11 +58,11 @@ export function useWorkouts() {
       return w;
     } else {
       // Create a new workout entry
-      const w = await WorkoutDB.create(body);
+      const w = await WorkoutDB.create(user.uid, body);
       await fetchAll();
       return w;
     }
-  }, [fetchAll, workouts]);
+  }, [fetchAll, workouts, user]);
 
   const removeWorkout = useCallback(async (id) => {
     await WorkoutDB.delete(id);
