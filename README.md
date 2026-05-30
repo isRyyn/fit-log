@@ -98,8 +98,6 @@ Tapping backup again re-authorises automatically via popup if needed.
 | createdAt    | string  | ISO datetime                               |
 | updatedAt    | string  | ISO datetime                               |
 
-Virtuals (computed in JS, not stored): `totalReps`, `totalVolume`
-
 ---
 
 ## Deployment (host the static build anywhere)

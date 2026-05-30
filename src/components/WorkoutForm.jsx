@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CHEST_EXERCISES, BACK_EXERCISES, CORE_EXERCISES, LEG_EXERCISES, TRICEP_EXERCISES, BICEP_EXERCISES, BODYWEIGHT_EXERCISES, SHOULDER_EXERCISES } from '../constants/exercises';
 import '../styles/WorkoutForm.css';
+import '../styles/common.css';
 
 const EXERCISES = {
   Bodyweight: BODYWEIGHT_EXERCISES,
@@ -81,6 +82,17 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
     setSetsList(updatedList);
   };
 
+  const handleCancel = () => {
+    setExercise('');
+    setEquipment('');
+    setEquipmentType('');
+    setCurrentReps(10);
+    setCurrentWeight('');
+    setSetsList([]);
+    setNotes('');
+    setError('');
+  };
+
   return (
     <div className="workout-form">
       <p className="workout-form__title">{editingWorkout ? 'Edit exercise' : 'Log exercise'}</p>
@@ -142,10 +154,13 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
               min="0"
               step="2.5"
               disabled={equipment === 'Bodyweight'}
+              className="workout-form__weight-input"
             />
           </div>
+          <div>
+            <button onClick={addSet} className="workout-form__add-set">+</button>
+          </div>
         </div>
-        <button onClick={addSet} className="workout-form__add-set">+ Add Set</button>
       </div>
 
       {/* Sets List */}
@@ -154,8 +169,7 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
           <label className="form-field__label">Sets ({setsList.length})</label>
           <div className="sets-list">
             {setsList.map((set, idx) => (
-              <div key={idx} className="sets-list__item">
-                <div className="sets-list__edit-inline">
+              <div className="sets-list__edit-inline">
                   <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flex: 1 }}>
                     <div>
                       <div className="counter__label" style={{ fontSize: '11px' }}>Reps</div>
@@ -171,12 +185,11 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
                         min="0"
                         step="2.5"
                         disabled={equipment === 'Bodyweight'}
-                        style={{ width: '100%', padding: '6px', borderRadius: 'var(--radius-md)', border: '1px solid var(--c-border)', fontSize: '13px' }}
+                        className="workout-form__weight-input"
                       />
                     </div>
                   </div>
                   <button onClick={() => removeSet(idx)} className="sets-list__remove" title="Remove set">✕</button>
-                </div>
               </div>
             ))}
           </div>
@@ -191,9 +204,11 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
 
       {error && <p className="form-field__error">{error}</p>}
 
-      <button onClick={handleSubmit} disabled={submitting} className="workout-form__submit">
-        {submitting ? 'Saving...' : (editingWorkout ? '✎ Update' : '+ Log exercise')}
-      </button>
+      <div className="workout__actions">
+        <button onClick={handleSubmit} disabled={submitting} className="workout-form__submit">
+         {submitting ? 'Saving...' : (editingWorkout ? '✎ Update' : '+ Log exercise')}
+        </button>
+      </div> 
     </div>
   );
 }

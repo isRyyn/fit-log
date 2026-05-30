@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../styles/WorkoutLog.css';
+import '../styles/common.css';
 
 const EQ_COLOR = {
   Barbell:    { bg:'rgba(55,138,221,0.12)', color:'#78b8f0' },
@@ -57,6 +58,7 @@ export default function WorkoutLog({ workouts, onDelete, onEdit, loading }) {
                   <span className="workout-entry__equipment" style={{ background: eq.bg, color: eq.color }}>{w.equipment}</span>
                   <span className="workout-entry__muscle-group">{ w.muscleGroup !== 'Bodyweight' ? w.muscleGroup : '' }</span>
                 </div>
+                {w.equipmentType && <p className="workout-entry__equipment-type">{w.equipmentType}</p>}
                 <div className="workout-entry__sets" style={{ '--sets-margin': w.notes ? '6px' : 0 }}>
                   {w.sets.map(s => (
                     <span key={s.setNumber} className="workout-entry__set">
@@ -65,9 +67,8 @@ export default function WorkoutLog({ workouts, onDelete, onEdit, loading }) {
                   ))}
                 </div>
                 {w.notes && <p className="workout-entry__notes">{w.notes}</p>}
-                {w.totalVolume > 0 && <p className="workout-entry__stats">{w.sets.length} sets · {w.totalReps} reps · {w.totalVolume} kg total</p>}
               </div>
-              <div className="workout-entry__actions">
+              <div className="workout__actions">
                 <button onClick={() => onEdit(w)} className="workout-entry__btn workout-entry__btn--edit" />
                 <button onClick={() => handleDeleteClick(w.id)} disabled={deleting} className="workout-entry__btn workout-entry__btn--delete" />
               </div>

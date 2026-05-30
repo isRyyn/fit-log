@@ -79,6 +79,13 @@
   color: var(--c-hint);
 }
 
+.workout-entry__equipment-type {
+  font-size: 12px;
+  color: var(--c-hint);
+  margin: 4px 0 0 0;
+  font-style: italic;
+}
+
 .workout-entry__sets {
   display: flex;
   flex-wrap: wrap;
@@ -100,17 +107,6 @@
   font-size: 12px;
   color: var(--c-muted);
   font-style: italic;
-}
-
-.workout-entry__stats {
-  font-size: 12px;
-  color: var(--c-hint);
-  margin-top: 5px;
-}
-
-.workout-entry__actions {
-  display: flex;
-  gap: 4px;
 }
 
 .workout-entry__btn {

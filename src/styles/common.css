@@ -1,0 +1,4 @@
+.workout__actions {
+  display: flex;
+  gap: 4px;
+}

@@ -14,8 +14,7 @@ import { db } from '../lib/firebase.js';
 
 function computeVirtuals(workout) {
   const totalReps = workout.sets.reduce((a, s) => a + s.reps, 0);
-  const totalVolume = workout.sets.reduce((a, s) => a + (s.weight ? s.weight * s.reps : 0), 0);
-  return { ...workout, totalReps, totalVolume: Math.round(totalVolume * 100) / 100 };
+  return { ...workout, totalReps };
 }
 
 function buildSets(body) {
@@ -83,6 +82,7 @@ export const WorkoutDB = {
       exercise: body.exercise,
       muscleGroup: body.muscleGroup || 'Other',
       equipment: body.equipment,
+      equipmentType: body.equipmentType || '',
       sets: buildSets(body),
       notes: body.notes || '',
       createdAt: serverTimestamp(),
@@ -102,6 +102,7 @@ export const WorkoutDB = {
       ...(body.exercise && { exercise: body.exercise }),
       ...(body.muscleGroup && { muscleGroup: body.muscleGroup }),
       ...(body.equipment && { equipment: body.equipment }),
+      ...(body.equipmentType !== undefined && { equipmentType: body.equipmentType }),
       ...(body.notes !== undefined && { notes: body.notes }),
       ...(body.sets && { sets: buildSets(body) }),
       updatedAt: serverTimestamp(),

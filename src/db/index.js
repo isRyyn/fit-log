@@ -32,8 +32,7 @@ function now() {
 
 function computeVirtuals(workout) {
   const totalReps = workout.sets.reduce((a, s) => a + s.reps, 0);
-  const totalVolume = workout.sets.reduce((a, s) => a + (s.weight ? s.weight * s.reps : 0), 0);
-  return { ...workout, totalReps, totalVolume: Math.round(totalVolume * 100) / 100 };
+  return { ...workout, totalReps };
 }
 
 function buildSets(body) {
@@ -119,7 +118,6 @@ export const WorkoutDB = {
     const workouts = await WorkoutDB.getByDate(date);
     const totalSets = workouts.reduce((a, w) => a + w.sets.length, 0);
     const totalReps = workouts.reduce((a, w) => a + w.totalReps, 0);
-    const totalVolume = workouts.reduce((a, w) => a + w.totalVolume, 0);
     const byMuscleGroup = workouts.reduce((acc, w) => {
       acc[w.muscleGroup] = (acc[w.muscleGroup] || 0) + 1;
       return acc;
@@ -129,7 +127,6 @@ export const WorkoutDB = {
       exerciseCount: workouts.length,
       totalSets,
       totalReps,
-      totalVolume: Math.round(totalVolume * 100) / 100,
       byMuscleGroup,
     };
   },
