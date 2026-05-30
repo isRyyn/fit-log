@@ -15,13 +15,13 @@ export default function App() {
   const { date, setDate, workouts, stats, loading, error, addWorkout, removeWorkout, updateWorkout } = useWorkouts();
   const [tab, setTab] = useState(TAB.LOG);
   const [editingWorkout, setEditingWorkout] = useState(null);
+  const [showMenu, setShowMenu] = useState(false);
 
   if (authLoading) {
     return (
       <div className="app">
         <header className="app__header">
-          <span className="app__header-logo">⊕</span>
-          <span className="app__header-title">Fit Log</span>
+          <img src="/header-logo.png" alt="Fit Log" className="app__header-logo" />
         </header>
         <div className="app__content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <p>Loading...</p>
@@ -35,10 +35,12 @@ export default function App() {
   }
 
   const handleLogout = async () => {
-    try {
-      await logout();
-    } catch (error) {
-      console.error('Logout failed:', error);
+    if (window.confirm('Are you sure you want to sign out?')) {
+      try {
+        await logout();
+      } catch (error) {
+        console.error('Logout failed:', error);
+      }
     }
   };
 
@@ -48,9 +50,18 @@ export default function App() {
       {/* Header */}
       <header className="app__header">
         <img src="/header-logo.png" alt="Fit Log" className="app__header-logo" />
-        <button onClick={handleLogout} className="app__header-logout" title="Sign out">
-          ⊗
-        </button>
+        <div className="app__header-menu-wrapper">
+          <button onClick={() => setShowMenu(!showMenu)} className="app__header-menu-btn" title="Menu">
+            ⋯
+          </button>
+          {showMenu && (
+            <div className="app__header-menu">
+              <button onClick={handleLogout} className="app__header-menu-item">
+                Sign out
+              </button>
+            </div>
+          )}
+        </div>
       </header>
 
       {/* Scrollable content */}

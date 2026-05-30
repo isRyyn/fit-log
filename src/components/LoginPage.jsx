@@ -17,8 +17,7 @@ export default function LoginPage() {
     <div className="login-page">
       <div className="login-container">
       <div className="login-header">
-        <div className="login-logo">⊕</div>
-        <h1 className="login-title">Fit Log</h1>
+        <img src="/logo.png" alt="Fit Log" className="login-logo" />
         <p className="login-subtitle">Track your fitness journey</p>
       </div>        <button 
           onClick={handleGoogleLogin} 
