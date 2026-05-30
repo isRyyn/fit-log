@@ -12,10 +12,26 @@ const EQ_COLOR = {
 
 export default function WorkoutLog({ workouts, onDelete, onEdit, loading }) {
   const [deletingId, setDeletingId] = useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(null);
 
-  const handleDelete = async (id) => {
-    setDeletingId(id);
-    try { await onDelete(id); } finally { setDeletingId(null); }
+  const handleDeleteClick = (id) => {
+    setConfirmDelete(id);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (confirmDelete) {
+      setDeletingId(confirmDelete);
+      try {
+        await onDelete(confirmDelete);
+      } finally {
+        setDeletingId(null);
+        setConfirmDelete(null);
+      }
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setConfirmDelete(null);
   };
 
   if (loading) return <div className="workout-log__loading">Loading…</div>;
@@ -39,7 +55,7 @@ export default function WorkoutLog({ workouts, onDelete, onEdit, loading }) {
                 <div className="workout-entry__title-row">
                   <span className="workout-entry__exercise">{w.exercise}</span>
                   <span className="workout-entry__equipment" style={{ background: eq.bg, color: eq.color }}>{w.equipment}</span>
-                  <span className="workout-entry__muscle-group">{w.muscleGroup}</span>
+                  <span className="workout-entry__muscle-group">{ w.muscleGroup !== 'Bodyweight' ? w.muscleGroup : '' }</span>
                 </div>
                 <div className="workout-entry__sets" style={{ '--sets-margin': w.notes ? '6px' : 0 }}>
                   {w.sets.map(s => (
@@ -53,12 +69,25 @@ export default function WorkoutLog({ workouts, onDelete, onEdit, loading }) {
               </div>
               <div className="workout-entry__actions">
                 <button onClick={() => onEdit(w)} className="workout-entry__btn workout-entry__btn--edit" />
-                <button onClick={() => handleDelete(w.id)} disabled={deleting} className="workout-entry__btn workout-entry__btn--delete" />
+                <button onClick={() => handleDeleteClick(w.id)} disabled={deleting} className="workout-entry__btn workout-entry__btn--delete" />
               </div>
             </div>
           </div>
         );
       })}
+
+      {confirmDelete && (
+        <div className="modal-overlay" onClick={handleCancelDelete}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3 className="modal-title">Delete Workout?</h3>
+            <p className="modal-message">This action cannot be undone.</p>
+            <div className="modal-actions">
+              <button className="modal-btn modal-btn--cancel" onClick={handleCancelDelete}>Cancel</button>
+              <button className="modal-btn modal-btn--confirm" onClick={handleConfirmDelete}>Delete</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

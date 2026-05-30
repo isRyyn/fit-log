@@ -118,3 +118,68 @@
   color: var(--c-muted);
   cursor: not-allowed;
 }
+
+.workout-form__add-set {
+  width: 100%;
+  padding: 10px;
+  margin-top: 8px;
+  background: var(--c-surface2);
+  color: var(--c-accent);
+  border: 1px solid var(--c-accent);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.workout-form__add-set:hover {
+  background: var(--c-accent-bg);
+}
+
+.sets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sets-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--c-surface2);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--c-border2);
+  gap: 8px;
+}
+
+.sets-list__edit-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.sets-list__info {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--c-text);
+}
+
+.sets-list__remove {
+  background: none;
+  border: none;
+  color: var(--c-danger);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.sets-list__remove:hover {
+  transform: scale(1.2);
+}
+
+
