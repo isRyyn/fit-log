@@ -16,7 +16,6 @@ export default function StatsBar({ stats }) {
       <Stat label="Exercises" value={stats?.exerciseCount} />
       <Stat label="Sets" value={stats?.totalSets} />
       <Stat label="Reps" value={stats?.totalReps} />
-      <Stat label="Vol kg" value={stats?.totalVolume} accent />
     </div>
   );
 }

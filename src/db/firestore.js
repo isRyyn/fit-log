@@ -126,7 +126,6 @@ export const WorkoutDB = {
     const workouts = await WorkoutDB.getByDate(userId, date);
     const totalSets = workouts.reduce((a, w) => a + w.sets.length, 0);
     const totalReps = workouts.reduce((a, w) => a + w.totalReps, 0);
-    const totalVolume = workouts.reduce((a, w) => a + w.totalVolume, 0);
     const byMuscleGroup = workouts.reduce((acc, w) => {
       acc[w.muscleGroup] = (acc[w.muscleGroup] || 0) + 1;
       return acc;
@@ -136,7 +135,6 @@ export const WorkoutDB = {
       exerciseCount: workouts.length,
       totalSets,
       totalReps,
-      totalVolume: Math.round(totalVolume * 100) / 100,
       byMuscleGroup,
     };
   },

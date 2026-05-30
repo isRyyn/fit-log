@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from './hooks/useAuth.jsx';
 import { useWorkouts } from './hooks/useWorkouts.js';
 import DatePicker from './components/DatePicker.jsx';
@@ -16,6 +16,18 @@ export default function App() {
   const [tab, setTab] = useState(TAB.LOG);
   const [editingWorkout, setEditingWorkout] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   if (authLoading) {
     return (
@@ -35,13 +47,7 @@ export default function App() {
   }
 
   const handleLogout = async () => {
-    if (window.confirm('Are you sure you want to sign out?')) {
-      try {
-        await logout();
-      } catch (error) {
-        console.error('Logout failed:', error);
-      }
-    }
+    await logout();
   };
 
   return (
@@ -50,13 +56,16 @@ export default function App() {
       {/* Header */}
       <header className="app__header">
         <img src="/header-logo.png" alt="Fit Log" className="app__header-logo" />
-        <div className="app__header-menu-wrapper">
+        <div className="app__header-menu-wrapper" ref={menuRef}>
           <button onClick={() => setShowMenu(!showMenu)} className="app__header-menu-btn" title="Menu">
             ⋯
           </button>
           {showMenu && (
             <div className="app__header-menu">
-              <button onClick={handleLogout} className="app__header-menu-item">
+              <button onClick={() => {
+                handleLogout();
+                setShowMenu(false);
+              }} className="app__header-menu-item">
                 Sign out
               </button>
             </div>
