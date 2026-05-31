@@ -50,7 +50,17 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
     setError('');
     setSubmitting(true);
     try {
-      const body = { date, exercise, muscleGroup: muscleFor(exercise), equipment, equipmentType, sets: setsList.length, reps: setsList[0].reps, weight: setsList[0].weight ? parseFloat(setsList[0].weight) : null, unit: 'kg', notes, setsList };
+      const body = { 
+        date, 
+        exercise, 
+        muscleGroup: muscleFor(exercise), 
+        equipment, 
+        equipmentType, 
+        sets: setsList.map(s => ({ ...s, weight: s.weight ? parseFloat(s.weight) : null })),
+        unit: 'kg', 
+        notes, 
+        setsList 
+    };
       if (editingWorkout) {
         await onUpdate(editingWorkout.id, body);
       } else {
