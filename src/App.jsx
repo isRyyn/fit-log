@@ -105,16 +105,15 @@ export default function App() {
               <p style={{ fontSize:11, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--c-muted)', fontWeight:600, marginBottom:10 }}>Account</p>
               <div style={{ background:'var(--c-surface)', border:'1px solid var(--c-border)', borderRadius:'var(--radius-lg)', padding:'14px 16px', marginBottom:16 }}>
                 <p style={{ fontSize:14, color:'var(--c-text)', fontWeight:500, marginBottom:4 }}>Signed in as</p>
-                <p style={{ fontSize:13, color:'var(--c-muted)' }}>{user?.email ?? 'Anonymous'}</p>
+                <p style={{ fontSize:13, color:'var(--c-muted)' }}>{user?.displayName ?? 'Anonymous'}</p>
               </div>
               <p style={{ fontSize:11, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--c-muted)', fontWeight:600, marginBottom:10 }}>Storage</p>
               <div style={{ background:'var(--c-surface)', border:'1px solid var(--c-border)', borderRadius:'var(--radius-lg)', padding:'14px 16px' }}>
                 <p style={{ fontSize:14, color:'var(--c-text)', fontWeight:500, marginBottom:4 }}>Firestore — Cloud</p>
                 <p style={{ fontSize:13, color:'var(--c-muted)' }}>
                     {user?.isAnonymous ? 
-                    <p>Guest data will be lost if you sign out. Please Sign in to save your data.</p> : 
-                    <p>All workouts are synced to the cloud in real-time. Access them from any device.</p>}
-        
+                    'Guest data will be lost if you sign out. Please sign in to save your data.' : 
+                    'All workouts are synced to the cloud in real-time. Access them from any device.'}
                 </p>
               </div>
             </div>

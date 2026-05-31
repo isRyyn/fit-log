@@ -4,7 +4,6 @@
   justify-content: center;
   min-height: 100vh;
   padding: 16px;
-  padding-bottom: 100px;
 }
 
 .login-background {
@@ -24,6 +23,7 @@
   border: 1px solid var(--c-border);
   border-radius: var(--radius-lg);
   padding: 40px 24px;
+  margin-bottom: 100px;
   text-align: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
