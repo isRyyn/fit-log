@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import Select from 'react-select';
 import { CHEST_EXERCISES, BACK_EXERCISES, CORE_EXERCISES, LEG_EXERCISES, TRICEP_EXERCISES, BICEP_EXERCISES, BODYWEIGHT_EXERCISES, SHOULDER_EXERCISES } from '../constants/exercises';
 import '../styles/WorkoutForm.css';
 import '../styles/common.css';
@@ -12,8 +13,9 @@ const EXERCISES = {
   Legs: LEG_EXERCISES,
   Shoulders: SHOULDER_EXERCISES, 
   Core: CORE_EXERCISES,
-};
-const EQUIPMENT = ['Barbell','Dumbbell','Machine','Bodyweight','Cable'];
+}
+
+const EQUIPMENT = ['Barbell','Dumbbell','Machine','Cable'];
 const muscleFor = (ex) => { for (const [g,list] of Object.entries(EXERCISES)) if (list.includes(ex)) return g; return 'Other'; };
 
 function Counter({ value, min, max, onChange }) {
@@ -41,6 +43,18 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
   const [notes, setNotes] = useState(editingWorkout?.notes || '');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+	const exerciseOptions = useMemo(
+  () =>
+    Object.entries(EXERCISES).map(([group, exercises]) => ({
+      label: group,
+      options: exercises.map(exercise => ({
+        value: exercise,
+        label: exercise
+      }))
+    })),
+  []
+);
 
   const handleSubmit = async () => {
     if (!exercise) { setError('Select an exercise.'); return; }
@@ -110,26 +124,33 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
       {/* Exercise */}
       <div className="form-field">
         <label className="form-field__label">① Exercise</label>
-        <select value={exercise} onChange={e => {
-          setExercise(e.target.value);
-          // Auto-select Bodyweight equipment if a bodyweight exercise is selected
-          if (BODYWEIGHT_EXERCISES.includes(e.target.value)) {
-            setEquipment('Bodyweight');
-          } else {
-            setEquipment(''); // Clear equipment selection for non-bodyweight exercises
-          }
-        }}>
-          <option value="">— Select an exercise —</option>
-          {Object.entries(EXERCISES).map(([g,list]) => (
-            <optgroup key={g} label={g}>{list.map(ex => <option key={ex}>{ex}</option>)}</optgroup>
-          ))}
-        </select>
+        <Select
+					options={exerciseOptions}
+					value={
+							exercise
+							? { value: exercise, label: exercise }
+							: null
+					}
+					placeholder="Select an exercise..."
+					isSearchable
+					className="exercise-select"
+  				classNamePrefix="exercise"
+					onChange={(selectedOption) => {
+							const selectedExercise = selectedOption?.value || '';
+
+							setExercise(selectedExercise);
+
+							if (BODYWEIGHT_EXERCISES.includes(selectedExercise)) {
+								setEquipment('');
+							}
+					}}
+        />
       </div>
 
       {/* Equipment */}
       <div className="form-field">
-        <label className="form-field__label">② Equipment</label>
-        <div className="form-field__equipment-group">
+        <label className="form-field__label">② Equipment or Grip Used</label>
+        {exercise && !EXERCISES.Bodyweight.includes(exercise) && <div className="form-field__equipment-group">
           {EQUIPMENT.map(eq => (
             <button
               key={eq}
@@ -142,8 +163,8 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
               {eq}
             </button>
           ))}
-        </div>
-        <input type="text" value={equipmentType} onChange={e => setEquipmentType(e.target.value)} placeholder="e.g., EZ bar, Smith machine (optional)" maxLength={100} style={{ marginTop: '8px', width: '100%', padding: '8px', borderRadius: 'var(--radius-md)', border: '1px solid var(--c-border)', fontSize: '14px' }} />
+        </div>}
+        <input type="text" value={equipmentType} onChange={e => setEquipmentType(e.target.value)} placeholder="Attachment/Grip (e.g., EZ bar, V bar)" maxLength={100} style={{ marginTop: '8px', width: '100%', padding: '8px', borderRadius: 'var(--radius-md)', border: '1px solid var(--c-border)', fontSize: '14px' }} />
       </div>
 
       {/* Add Set */}

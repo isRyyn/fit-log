@@ -27,6 +27,7 @@
   display: flex;
   gap: 7px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .form-field__equipment-btn {
@@ -187,4 +188,16 @@
   transform: scale(1.2);
 }
 
+.exercise__control, .exercise__menu, .exercise__option {
+    background-color: var(--c-surface2) !important;
+}
+
+.exercise__single-value, .exercise__input-container {
+    color: white !important;
+}
+
+.exercise__control {
+    border-color: var(--c-border2) !important;
+    box-shadow: 0 0 0 1px var(--c-accent) !important;
+}
 
