@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { onUserChanged, signInWithGoogle, signOutUser } from '../lib/firebase.js';
+import { onUserChanged, signInWithGoogle, signOutUser, signInAnon, signUpWithEmail, signInWithEmail } from '../lib/firebase.js';
 
 const AuthContext = createContext(null);
 
@@ -12,7 +12,6 @@ export function AuthProvider({ children }) {
       setUser(currentUser);
       setLoading(false);
     });
-
     return unsubscribe;
   }, []);
 
@@ -21,6 +20,33 @@ export function AuthProvider({ children }) {
       await signInWithGoogle();
     } catch (error) {
       console.error('Login error:', error);
+      throw error;
+    }
+  };
+
+  const loginAnonymously = async () => {
+    try {
+      await signInAnon();
+    } catch (error) {
+      console.error('Anonymous login error:', error);
+      throw error;
+    }
+  };
+
+  const registerWithEmail = async (email, password) => {
+    try {
+      await signUpWithEmail(email, password);
+    } catch (error) {
+      console.error('Registration error:', error);
+      throw error;
+    }
+  };
+
+  const loginWithEmail = async (email, password) => {
+    try {
+      await signInWithEmail(email, password);
+    } catch (error) {
+      console.error('Email login error:', error);
       throw error;
     }
   };
@@ -38,6 +64,9 @@ export function AuthProvider({ children }) {
     user,
     loading,
     login,
+    loginAnonymously,
+    loginWithEmail,
+    registerWithEmail,
     logout,
     isAuthenticated: !!user,
   };
