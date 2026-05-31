@@ -69,12 +69,14 @@ export default function LoginPage() {
 									<span className="gsi-material-button-contents">{loading ? 'Signing in...' : 'Continue with Google'}</span>
 							</div>
 							</button>
+            { false && <div>
+								<button onClick={() => { setMode('login'); setError(''); }} className="login-btn login-btn--email">
+									✉️ Continue with Email
+								</button>
 
-            <button onClick={() => { setMode('login'); setError(''); }} className="login-btn login-btn--email">
-              ✉️ Continue with Email
-            </button>
-
-            <div className="login-divider"><span>or</span></div>
+								<div className="login-divider"><span>or</span></div>
+							</div>
+						}
 
             <button onClick={handleAnonymous} disabled={loading} className="login-btn login-btn--anon">
               👤 Continue as Guest

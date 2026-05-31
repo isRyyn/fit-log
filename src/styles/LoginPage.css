@@ -44,19 +44,20 @@
 }
 
 .login-btn {
-  width: 100%;
-  padding: 14px 16px;
+  padding: 10px 12px;
+  margin-top: 10px;
+  padding: 10px 12px;
   background: var(--c-primary, #0066cc);
   color: white;
   border: none;
   border-radius: var(--radius-md);
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.login-btn:hover:not(:disabled) {
+.gsi-material-button:hover, .login-btn:hover:not(:disabled) {
   background: var(--c-primary-hover, #0052a3);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
@@ -86,7 +87,6 @@
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   cursor: pointer;
-  font-family: 'Roboto', arial, sans-serif;
   font-size: 14px;
   height: 40px;
   letter-spacing: 0.25px;
@@ -128,7 +128,6 @@
 .gsi-material-button .gsi-material-button-contents {
   -webkit-flex-grow: 1;
   flex-grow: 1;
-  font-family: 'Roboto', arial, sans-serif;
   font-weight: 500;
   overflow: hidden;
   text-overflow: ellipsis;
