@@ -15,7 +15,6 @@ export default function StatsBar({ stats }) {
     <div className="stats-bar">
       <Stat label="Exercises" value={stats?.exerciseCount} />
       <Stat label="Sets" value={stats?.totalSets} />
-      <Stat label="Reps" value={stats?.totalReps} />
     </div>
   );
 }

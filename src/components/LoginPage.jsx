@@ -46,6 +46,7 @@ export default function LoginPage() {
 
   return (
     <div className="login-page">
+			<img src="/background.png" alt="Background" className="login-background" />
       <div className="login-container">
         <div className="login-header">
           <img src="/logo.png" alt="Fit Log" className="login-logo" />
