@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import Select from 'react-select';
 import { CHEST_EXERCISES, BACK_EXERCISES, CORE_EXERCISES, LEG_EXERCISES, TRICEP_EXERCISES, BICEP_EXERCISES, BODYWEIGHT_EXERCISES, SHOULDER_EXERCISES } from '../constants/exercises';
 import '../styles/WorkoutForm.css';
@@ -38,11 +38,12 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
       ? editingWorkout.sets.map(s => ({ reps: s.reps, weight: s.weight?.toString() || '', unit: s.unit || 'kg' }))
       : []
   );
-  const [currentReps, setCurrentReps] = useState(10);
+  const [currentReps, setCurrentReps] = useState(12);
   const [currentWeight, setCurrentWeight] = useState('');
   const [notes, setNotes] = useState(editingWorkout?.notes || '');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+	const weightRef = useRef(null);
 
 	const exerciseOptions = useMemo(
   () =>
@@ -60,7 +61,7 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
     if (!exercise) { setError('Select an exercise.'); return; }
     if (!equipment) { setError('Select equipment.'); return; }
     if (setsList.length === 0) { setError('Add at least one set.'); return; }
-    if (equipment !== 'Bodyweight' && setsList.some(s => !s.weight)) { setError('Enter weight for all sets (non-bodyweight).'); return; }
+    if (!isExerciseBodyweight && setsList.some(s => !s.weight)) { setError('Enter weight for all sets (non-bodyweight).'); return; }
     setError('');
     setSubmitting(true);
     try {
@@ -79,21 +80,23 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
         await onUpdate(editingWorkout.id, body);
       } else {
         await onAdd(body);
-        setExercise(''); setEquipment(''); setEquipmentType(''); setCurrentReps(10); setCurrentWeight(''); setSetsList([]); setNotes('');
+        setExercise(''); setEquipment(''); setEquipmentType(''); setCurrentReps(12); setCurrentWeight(''); setSetsList([]); setNotes('');
       }
     } catch(e) { setError(e.message); }
     finally { setSubmitting(false); }
   };
 
+	const isExerciseBodyweight = exercise && EXERCISES.Bodyweight.includes(exercise);
+
   const addSet = () => {
-    if (equipment !== 'Bodyweight' && !currentWeight) { 
+    if (!isExerciseBodyweight && !currentWeight) { 
       setError('Enter weight before adding a set.'); 
       return; 
     }
     setError('');
     setSetsList([...setsList, { reps: currentReps, weight: currentWeight, unit: 'kg' }]);
     setCurrentWeight('');
-    setCurrentReps(10);
+    setCurrentReps(12);
   };
 
   const removeSet = (index) => {
@@ -104,17 +107,6 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
     const updatedList = [...setsList];
     updatedList[index][field] = value;
     setSetsList(updatedList);
-  };
-
-  const handleCancel = () => {
-    setExercise('');
-    setEquipment('');
-    setEquipmentType('');
-    setCurrentReps(10);
-    setCurrentWeight('');
-    setSetsList([]);
-    setNotes('');
-    setError('');
   };
 
   return (
@@ -141,8 +133,11 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
 							setExercise(selectedExercise);
 
 							if (BODYWEIGHT_EXERCISES.includes(selectedExercise)) {
-								setEquipment('');
-							}
+								setEquipment('Bodyweight');
+							} else {
+								setEquipment('Barbell');
+								weightRef.current?.focus();
+							}	
 					}}
         />
       </div>
@@ -150,7 +145,7 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
       {/* Equipment */}
       <div className="form-field">
         <label className="form-field__label">② Equipment or Grip Used</label>
-        {exercise && !EXERCISES.Bodyweight.includes(exercise) && <div className="form-field__equipment-group">
+        {!isExerciseBodyweight && <div className="form-field__equipment-group">
           {EQUIPMENT.map(eq => (
             <button
               key={eq}
@@ -178,13 +173,13 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
           <div className="form-field__input-wrapper">
             <div className="counter__label">Weight kg</div>
             <input
+							ref={weightRef}
               type="number"
               value={currentWeight}
               onChange={e => setCurrentWeight(e.target.value)}
-              placeholder={equipment === 'Bodyweight' ? 'optional' : 'e.g. 20'}
+              placeholder="e.g. 20"
               min="0"
               step="2.5"
-              disabled={equipment === 'Bodyweight'}
               className="workout-form__weight-input"
             />
           </div>

@@ -82,8 +82,6 @@ export default function LoginPage() {
             <button onClick={handleAnonymous} disabled={loading} className="login-btn login-btn--anon">
               👤 Continue as Guest
             </button>
-
-            <p className="login-anon-note">Guest data will be lost if you sign out.</p>
           </div>
         )}
 

@@ -7,6 +7,7 @@ import WorkoutForm from './components/WorkoutForm.jsx';
 import WorkoutLog from './components/WorkoutLog.jsx';
 import LoginPage from './components/LoginPage.jsx';
 import './styles/App.css';
+import './styles/common.css';
 
 const TAB = { LOG: 'log', ADD: 'add', PROFILE: 'profile' };
 
@@ -17,6 +18,7 @@ export default function App() {
   const [editingWorkout, setEditingWorkout] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef(null);
+  const [confirmLogout, setConfirmLogout] = useState(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -47,8 +49,14 @@ export default function App() {
   }
 
   const handleLogout = async () => {
+    if (user?.isAnonymous) return setConfirmLogout(true);
     await logout();
   };
+
+  const handleConfirmLogout = async () => {
+    setConfirmLogout(false);
+    await logout();
+  }
 
   return (
     <div className="app">
@@ -134,6 +142,19 @@ export default function App() {
           </button>
         ))}
       </nav>
+
+      {confirmLogout && (
+        <div className="modal-overlay" onClick={() => setConfirmLogout(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3 className="modal-title">Confirm logout?</h3>
+            <p className="modal-message">You'll lose your data if you sign out.</p>
+            <div className="modal-actions">
+              <button className="modal-btn modal-btn--cancel" onClick={() => setConfirmLogout(false)}>Cancel</button>
+              <button className="modal-btn modal-btn--confirm" onClick={handleConfirmLogout}>Logout</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

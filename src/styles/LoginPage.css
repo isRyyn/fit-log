@@ -2,7 +2,7 @@
   display: flex;
   align-items: end;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 100dvh;
   padding: 16px;
 }
 
@@ -23,6 +23,7 @@
   border: 1px solid var(--c-border);
   border-radius: var(--radius-lg);
   padding: 40px 24px;
+  margin-bottom: 10%;
   text-align: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
@@ -79,10 +80,6 @@
 
 .login-btn--anon {
     margin-bottom: 2px;
-}
-
-.login-anon-note {
-    font-size: 11px;
 }
 
 /* Google Sign-In Button Styles */
