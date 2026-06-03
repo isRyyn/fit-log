@@ -10,7 +10,7 @@ export default defineConfig({
       includeAssets: ['icons/*.png'],
       manifest: {
         name: 'Fit Log',
-        short_name: 'Workouts',
+        short_name: 'FitLog',
         description: 'Track your daily workouts offline',
         theme_color: '#0f0f10',
         background_color: '#0f0f10',
@@ -19,9 +19,9 @@ export default defineConfig({
         start_url: '/',
         scope: '/',
         icons: [
-          { src: 'favicon.png', sizes: '192x192', type: 'image/png' },
-          { src: 'favicon.png', sizes: '512x512', type: 'image/png' },
-          { src: 'favicon.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          { src: 'icon.png', sizes: '192x192', type: 'image/png' },
+          { src: 'icon.png', sizes: '512x512', type: 'image/png' },
+          { src: 'icon.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
       workbox: {
