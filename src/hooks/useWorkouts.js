@@ -37,32 +37,10 @@ export function useWorkouts() {
 
   const addWorkout = useCallback(async (body) => {
     if (!user) throw new Error('User not authenticated');
-    
-    // Check if an exercise with the same name and equipment exists on the same day
-    const existing = workouts.find(w => w.exercise === body.exercise && w.equipment === body.equipment);
-    
-    if (existing) {
-      // Add a new set to the existing workout instead of creating a new entry
-      const newSet = {
-        setNumber: existing.sets.length + 1,
-        reps: Number(body.reps),
-        weight: body.weight != null ? Number(body.weight) : null,
-        unit: body.unit || 'kg',
-      };
-      const updated = {
-        ...existing,
-        sets: [...existing.sets, newSet],
-      };
-      const w = await WorkoutDB.update(existing.id, updated);
-      await fetchAll();
-      return w;
-    } else {
-      // Create a new workout entry
-      const w = await WorkoutDB.create(user.uid, body);
-      await fetchAll();
-      return w;
-    }
-  }, [fetchAll, workouts, user]);
+    const w = await WorkoutDB.create(user.uid, body);
+    await fetchAll();
+    return w;
+  }, [fetchAll, user]);
 
   const removeWorkout = useCallback(async (id) => {
     await WorkoutDB.delete(id);
