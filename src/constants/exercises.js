@@ -42,7 +42,8 @@ export const BICEP_EXERCISES = [
 export const TRICEP_EXERCISES = [
     'Tricep Pushdown',
     'Skull Crusher',
-    'Close-grip Bench Press'
+    'Close-grip Bench Press',
+    'Overhead extension'
 ];
 
 export const BACK_EXERCISES = [
@@ -62,4 +63,9 @@ export const SHOULDER_EXERCISES = [
     'Front Raise',
     'Rear Delt Fly',
     'Shrugs'
+];
+
+export const FOREARM_EXERCISES = [
+    'Wrist Curl',
+    'Reverse Wrist Curl'
 ];

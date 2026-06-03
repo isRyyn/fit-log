@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef } from 'react';
 import Select from 'react-select';
-import { CHEST_EXERCISES, BACK_EXERCISES, CORE_EXERCISES, LEG_EXERCISES, TRICEP_EXERCISES, BICEP_EXERCISES, BODYWEIGHT_EXERCISES, SHOULDER_EXERCISES } from '../constants/exercises';
+import { CHEST_EXERCISES, BACK_EXERCISES, CORE_EXERCISES, LEG_EXERCISES, TRICEP_EXERCISES, BICEP_EXERCISES, BODYWEIGHT_EXERCISES, SHOULDER_EXERCISES, FOREARM_EXERCISES } from '../constants/exercises';
 import '../styles/WorkoutForm.css';
 import '../styles/common.css';
 
@@ -13,6 +13,7 @@ const EXERCISES = {
   Legs: LEG_EXERCISES,
   Shoulders: SHOULDER_EXERCISES, 
   Core: CORE_EXERCISES,
+	Forearm: FOREARM_EXERCISES
 }
 
 const EQUIPMENT = ['Barbell','Dumbbell','Machine','Cable'];
