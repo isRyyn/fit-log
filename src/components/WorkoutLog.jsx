@@ -63,6 +63,7 @@ export default function WorkoutLog({ workouts, onDelete, onEdit, loading }) {
                   {w.sets.map(s => (
                     <span key={s.setNumber} className="workout-entry__set">
                       {s.reps}×{s.weight ? `${s.weight}kg` : 'BW'}
+                      {s.note && <em className="workout-entry__set-note">{s.note}</em>}
                     </span>
                   ))}
                 </div>

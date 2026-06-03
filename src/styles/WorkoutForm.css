@@ -27,10 +27,11 @@
   display: flex;
   gap: 7px;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 .form-field__equipment-btn {
+  flex: 1;  
   padding: 8px 14px;
   border-radius: var(--radius-md);
   border: 1px solid var(--c-border2);
@@ -201,3 +202,23 @@
     box-shadow: 0 0 0 1px var(--c-accent) !important;
 }
 
+
+.workout-form__set-note-input {
+  font-size: 13px;
+  background: transparent !important;
+  color: var(--c-muted) !important;
+  box-sizing: border-box;
+  margin-top: 6px;
+  height: 20px;
+}
+
+.workout-form__set-note-input:focus {
+  outline: none;
+  border-color: var(--c-accent);
+  color: var(--c-text);
+}
+
+.workout-form__set-note-input::placeholder {
+  color: var(--c-muted);
+  opacity: 0.6;
+}

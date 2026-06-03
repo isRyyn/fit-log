@@ -24,6 +24,7 @@ function buildSets(body) {
       reps: Number(s.reps),
       weight: s.weight != null ? Number(s.weight) : null,
       unit: s.unit || 'kg',
+      note: s.note || '',
     }));
   }
   const count = parseInt(body.sets, 10);
@@ -32,6 +33,7 @@ function buildSets(body) {
     reps: Number(body.reps),
     weight: body.weight != null ? Number(body.weight) : null,
     unit: body.unit || 'kg',
+    note: '',
   }));
 }
 

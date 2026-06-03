@@ -147,3 +147,12 @@
 .workout-entry__btn:disabled {
   cursor: not-allowed;
 }
+
+.workout-entry__set-note {
+  display: block;
+  font-size: 11px;
+  color: var(--c-muted);
+  font-style: italic;
+  margin-top: 2px;
+  opacity: 0.8;
+}

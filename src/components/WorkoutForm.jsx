@@ -36,11 +36,12 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
   const [equipmentType, setEquipmentType] = useState(editingWorkout?.equipmentType || '');
   const [setsList, setSetsList] = useState(
     editingWorkout && Array.isArray(editingWorkout.sets) 
-      ? editingWorkout.sets.map(s => ({ reps: s.reps, weight: s.weight?.toString() || '', unit: s.unit || 'kg' }))
+      ? editingWorkout.sets.map(s => ({ reps: s.reps, weight: s.weight?.toString() || '', unit: s.unit || 'kg', note: s.note || '' }))
       : []
   );
   const [currentReps, setCurrentReps] = useState(12);
   const [currentWeight, setCurrentWeight] = useState('');
+  const [currentSetNote, setCurrentSetNote] = useState('');
   const [notes, setNotes] = useState(editingWorkout?.notes || '');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -74,14 +75,13 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
         equipmentType, 
         sets: setsList.map(s => ({ ...s, weight: s.weight ? parseFloat(s.weight) : null })),
         unit: 'kg', 
-        notes, 
-        setsList 
+        notes 
     };
       if (editingWorkout) {
         await onUpdate(editingWorkout.id, body);
       } else {
         await onAdd(body);
-        setExercise(''); setEquipment(''); setEquipmentType(''); setCurrentReps(12); setCurrentWeight(''); setSetsList([]); setNotes('');
+        setExercise(''); setEquipment(''); setEquipmentType(''); setCurrentReps(12); setCurrentWeight(''); setCurrentSetNote(''); setSetsList([]); setNotes('');
       }
     } catch(e) { setError(e.message); }
     finally { setSubmitting(false); }
@@ -95,9 +95,10 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
       return; 
     }
     setError('');
-    setSetsList([...setsList, { reps: currentReps, weight: currentWeight, unit: 'kg' }]);
+    setSetsList([...setsList, { reps: currentReps, weight: currentWeight, unit: 'kg', note: currentSetNote }]);
     setCurrentWeight('');
     setCurrentReps(12);
+    setCurrentSetNote('');
   };
 
   const removeSet = (index) => {
@@ -152,7 +153,7 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
               key={eq}
               onClick={() => {
                 setEquipment(eq);
-                // Clear weight when selecting Bodyweight; leave as-is otherwise
+								// Clear weight when selecting Bodyweight; leave as-is otherwise
                 if (eq === 'Bodyweight') setCurrentWeight('');
               }}
               className={`form-field__equipment-btn ${equipment === eq ? 'form-field__equipment-btn--active' : ''}`}>
@@ -174,7 +175,7 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
           <div className="form-field__input-wrapper">
             <div className="counter__label">Weight kg</div>
             <input
-							ref={weightRef}
+						ref={weightRef}
               type="number"
               value={currentWeight}
               onChange={e => setCurrentWeight(e.target.value)}
@@ -188,6 +189,14 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
             <button onClick={addSet} className="workout-form__add-set">+</button>
           </div>
         </div>
+        <input
+          type="text"
+          value={currentSetNote}
+          onChange={e => setCurrentSetNote(e.target.value)}
+					placeholder="Additional note"
+          maxLength={80}
+          className="workout-form__set-note-input"
+        />
       </div>
 
       {/* Sets List */}
@@ -196,25 +205,34 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
           <label className="form-field__label">Sets ({setsList.length})</label>
           <div className="sets-list">
             {setsList.map((set, idx) => (
-              <div className="sets-list__edit-inline">
-                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flex: 1 }}>
-                    <div>
-                      <div className="counter__label" style={{ fontSize: '11px' }}>Reps</div>
-                      <Counter value={set.reps} min={1} max={100} onChange={(val) => updateSet(idx, 'reps', val)} />
+              <div key={idx} className="sets-list__edit-inline">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                      <div>
+                        <div className="counter__label" style={{ fontSize: '11px' }}>Reps</div>
+                        <Counter value={set.reps} min={1} max={100} onChange={(val) => updateSet(idx, 'reps', val)} />
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div className="counter__label" style={{ fontSize: '11px' }}>Weight</div>
+                        <input
+                          type="number"
+                          value={set.weight}
+                          onChange={e => updateSet(idx, 'weight', e.target.value)}
+                          placeholder={isExerciseBodyweight ? 'optional' : 'e.g. 20'}
+                          min="0"
+                          step="2.5"
+                          disabled={isExerciseBodyweight}
+                          className="workout-form__weight-input"
+                        />
+                      </div>
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <div className="counter__label" style={{ fontSize: '11px' }}>Weight</div>
-                      <input
-                        type="number"
-                        value={set.weight}
-                        onChange={e => updateSet(idx, 'weight', e.target.value)}
-                        placeholder={equipment === 'Bodyweight' ? 'optional' : 'e.g. 20'}
-                        min="0"
-                        step="2.5"
-                        disabled={equipment === 'Bodyweight'}
-                        className="workout-form__weight-input"
-                      />
-                    </div>
+                    {set.note && <input
+                      type="text"
+                      value={set.note || ''}
+                      onChange={e => updateSet(idx, 'note', e.target.value)}
+                      maxLength={80}
+                      className="workout-form__set-note-input"
+                    />}
                   </div>
                   <button onClick={() => removeSet(idx)} className="sets-list__remove" title="Remove set">✕</button>
               </div>
