@@ -3,7 +3,8 @@ export const BODYWEIGHT_EXERCISES = [
     'Pull Up',
     'Chin Up',
     'Dips',
-    'Bodyweight Squat'
+    'Bodyweight Squat',
+    'Back hyperextension'
 ]; 
 
 export const CHEST_EXERCISES = [
@@ -53,7 +54,6 @@ export const BACK_EXERCISES = [
     'Reverse Grip Lat Pulldown',
     'Seated Cable Row',
     'T-Bar Row',
-    'Back hyperextension',
     'Face Pull',
 ];
 
