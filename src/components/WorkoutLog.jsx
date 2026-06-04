@@ -50,31 +50,37 @@ export default function WorkoutLog({ workouts, onDelete, onEdit, loading }) {
         const eq = EQ_COLOR[w.equipment] || EQ_COLOR.Other;
         const deleting = deletingId === w.id;
         return (
-          <div key={w.id} className={`workout-entry ${deleting ? 'workout-entry--deleting' : ''}`}>
-            <div className="workout-entry__header">
-              <div className="workout-entry__content">
-                <div className="workout-entry__title-row">
-                  <span className="workout-entry__exercise">{w.exercise}</span>
-                  <span className="workout-entry__equipment" style={{ background: eq.bg, color: eq.color }}>{w.equipment}</span>
-                  <span className="workout-entry__muscle-group">{ w.muscleGroup !== 'Bodyweight' ? w.muscleGroup : '' }</span>
-                </div>
-                {w.equipmentType && <p className="workout-entry__equipment-type">{w.equipmentType}</p>}
-                <div className="workout-entry__sets" style={{ '--sets-margin': w.notes ? '6px' : 0 }}>
-                  {w.sets.map(s => (
-                    <span key={s.setNumber} className="workout-entry__set">
-                      {s.reps}×{s.weight ? `${s.weight}kg` : 'BW'}
-                      {s.note && <em className="workout-entry__set-note">{s.note}</em>}
-                    </span>
-                  ))}
-                </div>
-                {w.notes && <p className="workout-entry__notes">{w.notes}</p>}
+            <div key={w.id} className={`workout-entry ${deleting ? 'workout-entry--deleting' : ''}`}>
+              <div>
+                  <div className="workout-entry__header">
+                  <div className="workout-entry__content">
+                      <div className="workout-entry__title-row">
+                      <span className="workout-entry__exercise">{w.exercise}</span>
+                      <span className="workout-entry__equipment" style={{ background: eq.bg, color: eq.color }}>{w.equipment}</span>
+                      <span className="workout-entry__muscle-group">{ w.muscleGroup !== 'Bodyweight' ? w.muscleGroup : '' }</span>
+                      </div>
+                      {w.equipmentType && <p className="workout-entry__equipment-type">{w.equipmentType}</p>}
+                  </div>
+                  <div className="workout__actions">
+                      <button onClick={() => onEdit(w)} className="workout-entry__btn workout-entry__btn--edit" />
+                      <button onClick={() => handleDeleteClick(w.id)} disabled={deleting} className="workout-entry__btn workout-entry__btn--delete" />
+                  </div>
+                  </div>
               </div>
-              <div className="workout__actions">
-                <button onClick={() => onEdit(w)} className="workout-entry__btn workout-entry__btn--edit" />
-                <button onClick={() => handleDeleteClick(w.id)} disabled={deleting} className="workout-entry__btn workout-entry__btn--delete" />
+              <div className="workout-entry__sets" style={{ '--sets-margin': w.notes ? '6px' : 0 }}>
+                {w.sets.map(s => (
+                  <span key={s.setNumber} className="workout-entry__set">
+                    {s.reps}×{s.weight ? `${s.weight}kg` : 'BW'}
+                    {s.note && <em className="workout-entry__set-note">{s.note}</em>}
+                  </span>
+                ))}
               </div>
+              {w.notes && 
+              <p className="workout-entry__notes">
+                <i class="fa-regular fa-clipboard"></i>
+                {w.notes}
+              </p>}
             </div>
-          </div>
         );
       })}
 
