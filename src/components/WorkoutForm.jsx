@@ -87,7 +87,7 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
     finally { setSubmitting(false); }
   };
 
-	const isExerciseBodyweight = exercise && EXERCISES.Bodyweight.includes(exercise);
+	const isExerciseBodyweight = exercise && (EXERCISES.Bodyweight.includes(exercise) || EXERCISES.Core.includes(exercise));
 
   const addSet = () => {
     if (!isExerciseBodyweight && !currentWeight) { 
@@ -134,7 +134,7 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
 
 							setExercise(selectedExercise);
 
-							if (BODYWEIGHT_EXERCISES.includes(selectedExercise)) {
+							if (BODYWEIGHT_EXERCISES.includes(selectedExercise) || CORE_EXERCISES.includes(selectedExercise)) {
 								setEquipment('Bodyweight');
 							} else {
 								setEquipment('Barbell');
