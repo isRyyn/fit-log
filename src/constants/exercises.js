@@ -4,7 +4,8 @@ export const BODYWEIGHT_EXERCISES = [
     'Chin Up',
     'Dips',
     'Bodyweight Squat',
-    'Back hyperextension'
+    'Back hyperextension',
+    'Calf raise'
 ]; 
 
 export const CHEST_EXERCISES = [
@@ -28,7 +29,7 @@ export const LEG_EXERCISES = [
     'Leg Press',
     'Leg Curl',
     'Leg Extension',
-    'Calf Raise',
+    'Seated Calf Raise',
     'Hip Abduction',
     'Hip Adduction',
     'Sumo Squat'
