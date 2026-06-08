@@ -1,0 +1,137 @@
+.workout-stats {
+  padding: 0 16px;
+}
+
+.workout-stats__loading {
+  padding: 16px;
+  font-size: 13px;
+  color: var(--c-muted);
+  text-align: center;
+}
+
+.workout-stats__section-label {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-muted);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* Stat cards */
+.workout-stats__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.workout-stats__card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.workout-stats__value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--c-text);
+  line-height: 1;
+}
+
+.workout-stats__label {
+  font-size: 12px;
+  color: var(--c-muted);
+}
+
+/* Top muscle */
+.workout-stats__top-muscle {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.workout-stats__top-muscle-label {
+  font-size: 13px;
+  color: var(--c-muted);
+}
+
+.workout-stats__top-muscle-value {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--c-text);
+}
+
+/* Heatmap */
+.heatmap {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  padding: 14px 12px;
+}
+
+.heatmap__day-labels {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 6px;
+}
+
+.heatmap__day-label {
+  font-size: 11px;
+  color: var(--c-muted);
+  text-align: center;
+  font-weight: 600;
+}
+
+.heatmap__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.heatmap__cell {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  background: var(--c-surface2, rgba(255,255,255,0.05));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.heatmap__cell--empty {
+  background: transparent;
+}
+
+.heatmap__cell--active {
+  background: var(--c-accent, #6c8aff);
+  opacity: 0.85;
+}
+
+.heatmap__cell--today {
+  outline: 2px solid var(--c-accent, #6c8aff);
+  outline-offset: -2px;
+}
+
+.heatmap__cell--active.heatmap__cell--today {
+  opacity: 1;
+}
+
+.heatmap__day-num {
+  font-size: 11px;
+  color: var(--c-muted);
+  line-height: 1;
+}
+
+.heatmap__cell--active .heatmap__day-num {
+  color: #fff;
+  font-weight: 600;
+}

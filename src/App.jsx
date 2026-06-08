@@ -6,6 +6,7 @@ import StatsBar from './components/StatsBar.jsx';
 import WorkoutForm from './components/WorkoutForm.jsx';
 import WorkoutLog from './components/WorkoutLog.jsx';
 import LoginPage from './components/LoginPage.jsx';
+import WorkoutStats from './components/WorkoutStats.jsx';
 import './styles/App.css';
 import './styles/common.css';
 
@@ -124,6 +125,7 @@ export default function App() {
                     'All workouts are synced to the cloud in real-time. Access them from any device.'}
                 </p>
               </div>
+              <WorkoutStats />
             </div>
           </div>
         )}
