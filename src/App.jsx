@@ -14,7 +14,7 @@ const TAB = { LOG: 'log', ADD: 'add', PROFILE: 'profile' };
 
 export default function App() {
   const { user, logout, isAuthenticated, loading: authLoading } = useAuth();
-  const { date, setDate, workouts, stats, loading, error, addWorkout, removeWorkout, updateWorkout } = useWorkouts();
+  const { date, setDate, workouts, stats, loading, error, addWorkout, removeWorkout, updateWorkout, reorderWorkouts } = useWorkouts();
   const [tab, setTab] = useState(TAB.LOG);
   const [editingWorkout, setEditingWorkout] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
@@ -100,7 +100,7 @@ export default function App() {
                 {workouts.length} {workouts.length === 1 ? 'entry' : 'entries'}
               </span>
             </div>
-            <WorkoutLog workouts={workouts} onDelete={removeWorkout} onEdit={(w) => { setEditingWorkout(w); setTab(TAB.ADD); }} loading={loading} />
+            <WorkoutLog workouts={workouts} onDelete={removeWorkout} onEdit={(w) => { setEditingWorkout(w); setTab(TAB.ADD); }} onReorder={reorderWorkouts} loading={loading} />
           </>
         )}
 

@@ -161,4 +161,35 @@
   font-style: italic;
   margin-top: 2px;
   opacity: 0.8;
+}  
+
+/* ── Reorder arrows ── */
+.workout-entry__reorder {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.workout-entry__reorder-btn {
+  background: none;
+  border: none;
+  color: var(--c-muted);
+  font-size: 10px;
+  padding: 3px 5px;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  line-height: 1;
+  transition: color 0.15s, background 0.15s;
+}
+
+.workout-entry__reorder-btn:hover:not(:disabled) {
+  color: var(--c-text);
+  background: var(--c-surface2, rgba(255,255,255,0.08));
+}
+
+.workout-entry__reorder-btn:disabled {
+  opacity: 0.2;
+  cursor: default;
 }

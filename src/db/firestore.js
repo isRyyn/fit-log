@@ -46,10 +46,16 @@ export const WorkoutDB = {
       orderBy('createdAt', 'desc')
     );
     const snapshot = await getDocs(q);
-    return snapshot.docs.map(doc => ({
+    const docs = snapshot.docs.map(doc => ({
       id: doc.id,
       ...computeVirtuals(doc.data()),
     }));
+    // Sort by sortOrder if present, fall back to createdAt order
+    return docs.sort((a, b) => {
+      const aOrder = a.sortOrder ?? Infinity;
+      const bOrder = b.sortOrder ?? Infinity;
+      return aOrder - bOrder;
+    });
   },
 
   async getAll(userId) {
@@ -67,7 +73,6 @@ export const WorkoutDB = {
   },
 
   async getById(id) {
-    const docRef = doc(db, 'workouts', id);
     const docSnap = await getDocs(query(collection(db, 'workouts'), where('__name__', '==', id)));
     if (docSnap.empty) return null;
     const data = docSnap.docs[0].data();
@@ -87,6 +92,7 @@ export const WorkoutDB = {
       equipmentType: body.equipmentType || '',
       sets: buildSets(body),
       notes: body.notes || '',
+      sortOrder: body.sortOrder ?? 0,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     };
@@ -118,6 +124,11 @@ export const WorkoutDB = {
       id: snapshot.docs[0].id,
       ...computeVirtuals(data),
     };
+  },
+
+  async updateSortOrder(id, sortOrder) {
+    const docRef = doc(db, 'workouts', id);
+    await updateDoc(docRef, { sortOrder });
   },
 
   async delete(id) {

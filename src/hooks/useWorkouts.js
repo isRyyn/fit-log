@@ -37,10 +37,12 @@ export function useWorkouts() {
 
   const addWorkout = useCallback(async (body) => {
     if (!user) throw new Error('User not authenticated');
-    const w = await WorkoutDB.create(user.uid, body);
+    // Assign sortOrder as current max + 1
+    const maxOrder = workouts.reduce((max, w) => Math.max(max, w.sortOrder ?? 0), 0);
+    const w = await WorkoutDB.create(user.uid, { ...body, sortOrder: maxOrder + 1 });
     await fetchAll();
     return w;
-  }, [fetchAll, user]);
+  }, [fetchAll, user, workouts]);
 
   const removeWorkout = useCallback(async (id) => {
     await WorkoutDB.delete(id);
@@ -52,5 +54,18 @@ export function useWorkouts() {
     await fetchAll();
   }, [fetchAll]);
 
-  return { date, setDate, workouts, stats, loading, error, addWorkout, removeWorkout, updateWorkout, refetch: fetchAll };
+  const reorderWorkouts = useCallback(async (fromIndex, toIndex) => {
+    if (fromIndex === toIndex) return;
+    // Optimistically reorder in state
+    const reordered = [...workouts];
+    const [moved] = reordered.splice(fromIndex, 1);
+    reordered.splice(toIndex, 0, moved);
+    // Assign new sortOrder values based on new positions
+    const updated = reordered.map((w, i) => ({ ...w, sortOrder: i + 1 }));
+    setWorkouts(updated);
+    // Persist all affected sortOrders
+    await Promise.all(updated.map(w => WorkoutDB.updateSortOrder(w.id, w.sortOrder)));
+  }, [workouts]);
+
+  return { date, setDate, workouts, stats, loading, error, addWorkout, removeWorkout, updateWorkout, reorderWorkouts, refetch: fetchAll };
 }

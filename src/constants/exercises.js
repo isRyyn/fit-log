@@ -56,6 +56,7 @@ export const BACK_EXERCISES = [
     'Seated Cable Row',
     'T-Bar Row',
     'Face Pull',
+    'One arm row'
 ];
 
 export const SHOULDER_EXERCISES = [

@@ -11,13 +11,11 @@ const EQ_COLOR = {
   Other:      { bg:'rgba(136,135,128,0.12)',color:'#888880' },
 };
 
-export default function WorkoutLog({ workouts, onDelete, onEdit, loading }) {
+export default function WorkoutLog({ workouts, onDelete, onEdit, onReorder, loading }) {
   const [deletingId, setDeletingId] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
 
-  const handleDeleteClick = (id) => {
-    setConfirmDelete(id);
-  };
+  const handleDeleteClick = (id) => setConfirmDelete(id);
 
   const handleConfirmDelete = async () => {
     if (confirmDelete) {
@@ -31,10 +29,6 @@ export default function WorkoutLog({ workouts, onDelete, onEdit, loading }) {
     }
   };
 
-  const handleCancelDelete = () => {
-    setConfirmDelete(null);
-  };
-
   if (loading) return <div className="workout-log__loading">Loading…</div>;
 
   if (!workouts.length) return (
@@ -46,51 +40,70 @@ export default function WorkoutLog({ workouts, onDelete, onEdit, loading }) {
 
   return (
     <div className="workout-log">
-      {workouts.map(w => {
+      {workouts.map((w, idx) => {
         const eq = EQ_COLOR[w.equipment] || EQ_COLOR.Other;
         const deleting = deletingId === w.id;
+        const isFirst = idx === 0;
+        const isLast = idx === workouts.length - 1;
+
         return (
-            <div key={w.id} className={`workout-entry ${deleting ? 'workout-entry--deleting' : ''}`}>
-              <div>
-                  <div className="workout-entry__header">
-                  <div className="workout-entry__content">
-                      <div className="workout-entry__title-row">
-                      <span className="workout-entry__exercise">{w.exercise}</span>
-                      <span className="workout-entry__equipment" style={{ background: eq.bg, color: eq.color }}>{w.equipment}</span>
-                      <span className="workout-entry__muscle-group">{ w.muscleGroup !== 'Bodyweight' ? w.muscleGroup : '' }</span>
-                      </div>
-                      {w.equipmentType && <p className="workout-entry__equipment-type">{w.equipmentType}</p>}
-                  </div>
-                  <div className="workout__actions">
-                      <button onClick={() => onEdit(w)} className="workout-entry__btn workout-entry__btn--edit" />
-                      <button onClick={() => handleDeleteClick(w.id)} disabled={deleting} className="workout-entry__btn workout-entry__btn--delete" />
-                  </div>
-                  </div>
+          <div key={w.id} className={`workout-entry ${deleting ? 'workout-entry--deleting' : ''}`}>
+            <div className="workout-entry__header">
+
+              {/* Reorder arrows */}
+              <div className="workout-entry__reorder">
+                <button
+                  className="workout-entry__reorder-btn"
+                  onClick={() => onReorder(idx, idx - 1)}
+                  disabled={isFirst}
+                  title="Move up"
+                >▲</button>
+                <button
+                  className="workout-entry__reorder-btn"
+                  onClick={() => onReorder(idx, idx + 1)}
+                  disabled={isLast}
+                  title="Move down"
+                >▼</button>
               </div>
-              <div className="workout-entry__sets" style={{ '--sets-margin': w.notes ? '6px' : 0 }}>
-                {w.sets.map(s => (
-                  <span key={s.setNumber} className="workout-entry__set">
-                    {s.reps}×{s.weight ? `${s.weight}kg` : 'BW'}
-                    {s.note && <em className="workout-entry__set-note">{s.note}</em>}
-                  </span>
-                ))}
-              </div>
-              {w.notes && 
+
+              <div className="workout-entry__content">
+                <div className="workout-entry__title-row">
+                  <span className="workout-entry__exercise">{w.exercise}</span>
+                  <span className="workout-entry__equipment" style={{ background: eq.bg, color: eq.color }}>{w.equipment}</span>
+                  <span className="workout-entry__muscle-group">{ w.muscleGroup !== 'Bodyweight' ? w.muscleGroup : '' }</span>
+                </div>
+                {w.equipmentType && <p className="workout-entry__equipment-type">{w.equipmentType}</p>}
+                <div className="workout-entry__sets" style={{ '--sets-margin': w.notes ? '6px' : 0 }}>
+                  {w.sets.map(s => (
+                    <span key={s.setNumber} className="workout-entry__set">
+                      {s.reps}×{s.weight ? `${s.weight}kg` : 'BW'}
+                      {s.note && <em className="workout-entry__set-note">{s.note}</em>}
+                    </span>
+                  ))}
+                </div>
+                {w.notes && 
               <p className="workout-entry__notes">
                 <i class="fa-regular fa-clipboard"></i>
                 {w.notes}
               </p>}
+              </div>
+
+              <div className="workout__actions">
+                <button onClick={() => onEdit(w)} className="workout-entry__btn workout-entry__btn--edit" />
+                <button onClick={() => handleDeleteClick(w.id)} disabled={deleting} className="workout-entry__btn workout-entry__btn--delete" />
+              </div>
             </div>
+          </div>
         );
       })}
 
       {confirmDelete && (
-        <div className="modal-overlay" onClick={handleCancelDelete}>
+        <div className="modal-overlay" onClick={() => setConfirmDelete(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h3 className="modal-title">Delete Workout?</h3>
             <p className="modal-message">This action cannot be undone.</p>
             <div className="modal-actions">
-              <button className="modal-btn modal-btn--cancel" onClick={handleCancelDelete}>Cancel</button>
+              <button className="modal-btn modal-btn--cancel" onClick={() => setConfirmDelete(null)}>Cancel</button>
               <button className="modal-btn modal-btn--confirm" onClick={handleConfirmDelete}>Delete</button>
             </div>
           </div>
