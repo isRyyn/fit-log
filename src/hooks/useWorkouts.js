@@ -37,9 +37,9 @@ export function useWorkouts() {
 
   const addWorkout = useCallback(async (body) => {
     if (!user) throw new Error('User not authenticated');
-    // Assign sortOrder as current max + 1
-    const maxOrder = workouts.reduce((max, w) => Math.max(max, w.sortOrder ?? 0), 0);
-    const w = await WorkoutDB.create(user.uid, { ...body, sortOrder: maxOrder + 1 });
+    // Assign sortOrder as current min - 1 so new entries appear at top
+    const minOrder = workouts.reduce((min, w) => Math.min(min, w.sortOrder ?? 0), 0);
+    const w = await WorkoutDB.create(user.uid, { ...body, sortOrder: minOrder - 1 });
     await fetchAll();
     return w;
   }, [fetchAll, user, workouts]);
