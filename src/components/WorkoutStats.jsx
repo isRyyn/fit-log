@@ -72,11 +72,19 @@ export default function WorkoutStats() {
         </div>
       </div>
 
-      {/* Top muscle */}
-      <div className="workout-stats__top-muscle">
-        <span className="workout-stats__top-muscle-label">Top muscle this month</span>
-        <span className="workout-stats__top-muscle-value">{stats.topMuscle}</span>
-      </div>
+      {/* Session title breakdown */}
+      {stats.titleSummary.length > 0 && (
+        <div className="workout-stats__titles">
+          <span className="workout-stats__top-muscle-label">This month's sessions</span>
+          <div className="workout-stats__title-pills">
+            {stats.titleSummary.map(([title, count]) => (
+              <span key={title} className="workout-stats__title-pill">
+                {title} <span className="workout-stats__title-count">{count}</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Heatmap */}
       <p className="workout-stats__section-label" style={{ marginTop: 20 }}>

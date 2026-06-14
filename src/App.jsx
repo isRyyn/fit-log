@@ -7,6 +7,7 @@ import WorkoutForm from './components/WorkoutForm.jsx';
 import WorkoutLog from './components/WorkoutLog.jsx';
 import LoginPage from './components/LoginPage.jsx';
 import WorkoutStats from './components/WorkoutStats.jsx';
+import DayTitle from './components/DayTitle.jsx';
 import './styles/App.css';
 import './styles/common.css';
 
@@ -94,6 +95,7 @@ export default function App() {
                 ⚠ {error}
               </div>
             )}
+            <DayTitle date={date} />
             <div className="app__section-header">
               <span className="app__section-title">Today's log</span>
               <span className="app__section-badge">

@@ -1,0 +1,55 @@
+.day-title {
+  padding: 4px 16px 8px;
+}
+
+.day-title__input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--c-accent);
+  border-radius: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--c-text);
+  padding: 4px 0;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.day-title__input::placeholder {
+  color: var(--c-muted);
+  font-weight: 400;
+  font-size: 15px;
+}
+
+.day-title__display {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+
+.day-title__text {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--c-text);
+  display: block;
+}
+
+.day-title__placeholder {
+  font-size: 13px;
+  color: var(--c-muted);
+  opacity: 0.6;
+  display: block;
+}
+
+.day-title__display:hover .day-title__placeholder {
+  opacity: 1;
+  color: var(--c-accent);
+}
+
+.day-title__display:hover .day-title__text {
+  opacity: 0.8;
+}

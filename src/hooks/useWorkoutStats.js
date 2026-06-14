@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import { WorkoutDB } from '../db/firestore.js';
+import { db } from '../lib/firebase.js';
 import { useAuth } from './useAuth.jsx';
 
-function computeStats(workouts) {
+function computeStats(workouts, dayTitleDocs) {
   const today = new Date();
-  const todayStr = today.toISOString().split('T')[0];
   const year = today.getFullYear();
   const month = today.getMonth();
 
@@ -56,28 +57,26 @@ function computeStats(workouts) {
   }
   longestStreak = Math.max(longestStreak, runningStreak);
 
-  // Top muscle group this month
-  const thisMonthWorkouts = workouts.filter(w => {
-    const dt = new Date(w.date);
-    return dt.getFullYear() === year && dt.getMonth() === month;
-  });
-  const muscleCounts = thisMonthWorkouts.reduce((acc, w) => {
-    if (w.muscleGroup && w.muscleGroup !== 'Other') {
-      acc[w.muscleGroup] = (acc[w.muscleGroup] || 0) + 1;
-    }
-    return acc;
-  }, {});
-  const topMuscle = Object.entries(muscleCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || '—';
-
   // Active days set for heatmap
   const activeDaysThisMonth = new Set(thisMonthDays);
+
+  // Session title counts for this month (e.g. Pull - 3, Push - 3, Legs - 5)
+  const titleCounts = {};
+  for (const { date, title } of dayTitleDocs) {
+    const dt = new Date(date);
+    if (dt.getFullYear() === year && dt.getMonth() === month && title) {
+      titleCounts[title] = (titleCounts[title] || 0) + 1;
+    }
+  }
+  const titleSummary = Object.entries(titleCounts)
+    .sort((a, b) => b[1] - a[1]);
 
   return {
     daysThisMonth: thisMonthDays.length,
     currentStreak,
     longestStreak,
     totalWorkouts: workouts.length,
-    topMuscle,
+    titleSummary,
     activeDaysThisMonth,
   };
 }
@@ -90,8 +89,14 @@ export function useWorkoutStats() {
   useEffect(() => {
     if (!user) return;
     setLoading(true);
-    WorkoutDB.getAll(user.uid)
-      .then(workouts => setStats(computeStats(workouts)))
+    Promise.all([
+      WorkoutDB.getAll(user.uid),
+      getDocs(query(collection(db, 'dayTitles'), where('userId', '==', user.uid))),
+    ])
+      .then(([workouts, titleSnap]) => {
+        const dayTitleDocs = titleSnap.docs.map(d => d.data());
+        setStats(computeStats(workouts, dayTitleDocs));
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [user]);

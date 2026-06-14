@@ -20,7 +20,7 @@ export const CHEST_EXERCISES = [
 
 export const CORE_EXERCISES = [
     'Plank',
-    'Crunch',
+    'Crunches',
     'Hanging Leg Raise'
 ];
 

@@ -135,3 +135,37 @@
   color: #fff;
   font-weight: 600;
 }
+
+/* Session title breakdown */
+.workout-stats__titles {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+}
+
+.workout-stats__title-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.workout-stats__title-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-text);
+  background: var(--c-surface2, rgba(255,255,255,0.06));
+  border: 1px solid var(--c-border);
+  border-radius: 99px;
+  padding: 5px 12px;
+}
+
+.workout-stats__title-count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--c-accent);
+}
