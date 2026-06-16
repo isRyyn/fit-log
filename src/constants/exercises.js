@@ -5,7 +5,8 @@ export const BODYWEIGHT_EXERCISES = [
     'Dips',
     'Bodyweight Squat',
     'Back hyperextension',
-    'Calf raise'
+    'Calf raise',
+    'Deadhang'
 ]; 
 
 export const CHEST_EXERCISES = [
@@ -45,7 +46,8 @@ export const TRICEP_EXERCISES = [
     'Tricep Pushdown',
     'Skull Crusher',
     'Close-grip Bench Press',
-    'Overhead extension'
+    'Overhead extension',
+    'Kickback'
 ];
 
 export const BACK_EXERCISES = [
