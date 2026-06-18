@@ -5,7 +5,7 @@ import { useAuth } from './useAuth.jsx';
 
 export function useDayTitle(date) {
   const { user } = useAuth();
-  const [title, setTitle] = useState('');
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const docId = user ? `${user.uid}_${date}` : null;
@@ -14,21 +14,26 @@ export function useDayTitle(date) {
     if (!docId) return;
     setLoading(true);
     getDoc(doc(db, 'dayTitles', docId))
-      .then(snap => setTitle(snap.exists() ? snap.data().title : ''))
+      .then(snap => {
+        if (!snap.exists()) { setCategories([]); return; }
+        const data = snap.data();
+        // categories is the canonical field; fall back to [] for any old shape
+        setCategories(Array.isArray(data.categories) ? data.categories : []);
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [docId]);
 
-  const saveTitle = useCallback(async (value) => {
+  const saveCategories = useCallback(async (values) => {
     if (!docId) return;
-    const trimmed = value.trim();
-    if (trimmed) {
-      await setDoc(doc(db, 'dayTitles', docId), { title: trimmed, userId: user.uid, date });
+    const cleaned = [...new Set(values)].filter(Boolean);
+    if (cleaned.length > 0) {
+      await setDoc(doc(db, 'dayTitles', docId), { categories: cleaned, userId: user.uid, date });
     } else {
       await deleteDoc(doc(db, 'dayTitles', docId)).catch(() => {});
     }
-    setTitle(trimmed);
+    setCategories(cleaned);
   }, [docId, user, date]);
 
-  return { title, setTitle, saveTitle, loading };
+  return { categories, saveCategories, loading };
 }

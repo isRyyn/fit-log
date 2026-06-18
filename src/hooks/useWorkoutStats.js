@@ -60,16 +60,17 @@ function computeStats(workouts, dayTitleDocs) {
   // Active days set for heatmap
   const activeDaysThisMonth = new Set(thisMonthDays);
 
-  // Session title counts for this month (e.g. Pull - 3, Push - 3, Legs - 5)
-  const titleCounts = {};
-  for (const { date, title } of dayTitleDocs) {
+  // Category tag counts for this month (e.g. Back - 3, Push - 3, Legs - 5)
+  const categoryCounts = {};
+  for (const { date, categories } of dayTitleDocs) {
     const dt = new Date(date);
-    if (dt.getFullYear() === year && dt.getMonth() === month && title) {
-      titleCounts[title] = (titleCounts[title] || 0) + 1;
+    if (dt.getFullYear() === year && dt.getMonth() === month && Array.isArray(categories)) {
+      for (const cat of categories) {
+        categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+      }
     }
   }
-  const titleSummary = Object.entries(titleCounts)
-    .sort((a, b) => b[1] - a[1]);
+  const titleSummary = Object.entries(categoryCounts).sort((a, b) => b[1] - a[1]);
 
   return {
     daysThisMonth: thisMonthDays.length,

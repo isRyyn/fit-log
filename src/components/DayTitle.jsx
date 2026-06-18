@@ -1,55 +1,61 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDayTitle } from '../hooks/useDayTitle.js';
 import '../styles/DayTitle.css';
 
+const CATEGORIES = ['Bodyweight', 'Chest', 'Triceps', 'Back', 'Biceps', 'Legs', 'Shoulders', 'Core', 'Forearm'];
+
 export default function DayTitle({ date }) {
-  const { title, setTitle, saveTitle, loading } = useDayTitle(date);
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState('');
-  const inputRef = useRef(null);
+  const { categories, saveCategories, loading } = useDayTitle(date);
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef(null);
 
   useEffect(() => {
-    if (!loading) setDraft(title);
-  }, [title, loading]);
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-  const startEditing = () => {
-    setDraft(title);
-    setEditing(true);
-    setTimeout(() => inputRef.current?.focus(), 0);
-  };
-
-  const commit = async () => {
-    setEditing(false);
-    if (draft !== title) await saveTitle(draft);
-  };
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') commit();
-    if (e.key === 'Escape') { setEditing(false); setDraft(title); }
+  const toggle = (cat) => {
+    if (categories.includes(cat)) {
+      saveCategories(categories.filter(c => c !== cat));
+    } else {
+      saveCategories([...categories, cat]);
+    }
   };
 
   if (loading) return null;
 
   return (
-    <div className="day-title">
-      {editing ? (
-        <input
-          ref={inputRef}
-          className="day-title__input"
-          value={draft}
-          onChange={e => setDraft(e.target.value)}
-          onBlur={commit}
-          onKeyDown={handleKeyDown}
-          placeholder="Name this session…"
-          maxLength={60}
-        />
-      ) : (
-        <button className="day-title__display" onClick={startEditing}>
-          {title
-            ? <span className="day-title__text">{title}</span>
-            : <span className="day-title__placeholder">+ Add session title</span>
-          }
-        </button>
+    <div className="day-title" ref={containerRef}>
+      <button className="day-title__display" onClick={() => setOpen(o => !o)}>
+        {categories.length > 0 ? (
+          <span className="day-title__pills">
+            {categories.map(cat => (
+              <span key={cat} className="day-title__pill">{cat}</span>
+            ))}
+          </span>
+        ) : (
+          <span className="day-title__placeholder">+ Tag this session</span>
+        )}
+      </button>
+
+      {open && (
+        <div className="day-title__dropdown">
+          {CATEGORIES.map(cat => (
+            <button
+              key={cat}
+              className={`day-title__option ${categories.includes(cat) ? 'day-title__option--selected' : ''}`}
+              onClick={() => toggle(cat)}
+            >
+              <span className="day-title__checkbox">{categories.includes(cat) ? '✓' : ''}</span>
+              {cat}
+            </button>
+          ))}
+        </div>
       )}
     </div>
   );

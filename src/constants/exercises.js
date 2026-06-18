@@ -56,6 +56,7 @@ export const BACK_EXERCISES = [
     'Lat Pulldown',
     'Reverse Grip Lat Pulldown',
     'Seated Cable Row',
+    'Chest supported Seated Row',
     'T-Bar Row',
     'Face Pull',
     'One arm row'
