@@ -74,3 +74,8 @@ export const FOREARM_EXERCISES = [
     'Wrist Curl',
     'Reverse Wrist Curl'
 ];
+
+export const CARDIO = [
+    'Running',
+    'Cycling'
+];
