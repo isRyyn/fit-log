@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
-import { collection, query, where, getDocs } from 'firebase/firestore';
 import { WorkoutDB } from '../db/firestore.js';
-import { db } from '../lib/firebase.js';
 import { useAuth } from './useAuth.jsx';
 
-function computeStats(workouts, dayTitleDocs) {
+function computeStats(workouts) {
   const today = new Date();
   const year = today.getFullYear();
   const month = today.getMonth();
@@ -25,7 +23,7 @@ function computeStats(workouts, dayTitleDocs) {
     const lastDate = new Date(lastDay);
     const diffFromToday = Math.floor((today - lastDate) / 86400000);
 
-    // Streak is alive if last workout was today or yesterday
+    // Streak is alive if last workout was today or yesterday 
     if (diffFromToday <= 1) {
       currentStreak = 1;
       for (let i = allDays.length - 2; i >= 0; i--) {
@@ -60,14 +58,20 @@ function computeStats(workouts, dayTitleDocs) {
   // Active days set for heatmap
   const activeDaysThisMonth = new Set(thisMonthDays);
 
-  // Category tag counts for this month (e.g. Back - 3, Push - 3, Legs - 5)
+  // Category tag counts for this month, derived from muscleGroup of exercises logged.
+  // Group by date first so a category logged twice in one day only counts once for that day.
+  const categoriesByDate = {};
+  for (const w of workouts) {
+    const dt = new Date(w.date);
+    if (dt.getFullYear() !== year || dt.getMonth() !== month) continue;
+    if (!w.muscleGroup || w.muscleGroup === 'Other') continue;
+    if (!categoriesByDate[w.date]) categoriesByDate[w.date] = new Set();
+    categoriesByDate[w.date].add(w.muscleGroup);
+  }
   const categoryCounts = {};
-  for (const { date, categories } of dayTitleDocs) {
-    const dt = new Date(date);
-    if (dt.getFullYear() === year && dt.getMonth() === month && Array.isArray(categories)) {
-      for (const cat of categories) {
-        categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
-      }
+  for (const catsSet of Object.values(categoriesByDate)) {
+    for (const cat of catsSet) {
+      categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
     }
   }
   const titleSummary = Object.entries(categoryCounts).sort((a, b) => b[1] - a[1]);
@@ -90,14 +94,8 @@ export function useWorkoutStats() {
   useEffect(() => {
     if (!user) return;
     setLoading(true);
-    Promise.all([
-      WorkoutDB.getAll(user.uid),
-      getDocs(query(collection(db, 'dayTitles'), where('userId', '==', user.uid))),
-    ])
-      .then(([workouts, titleSnap]) => {
-        const dayTitleDocs = titleSnap.docs.map(d => d.data());
-        setStats(computeStats(workouts, dayTitleDocs));
-      })
+    WorkoutDB.getAll(user.uid)
+      .then(workouts => setStats(computeStats(workouts)))
       .catch(console.error)
       .finally(() => setLoading(false));
   }, [user]);

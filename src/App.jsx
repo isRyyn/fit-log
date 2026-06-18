@@ -95,7 +95,7 @@ export default function App() {
                 ⚠ {error}
               </div>
             )}
-            <DayTitle date={date} />
+            <DayTitle workouts={workouts} />
             <div className="app__section-header">
               <span className="app__section-title">Today's log</span>
               <span className="app__section-badge">

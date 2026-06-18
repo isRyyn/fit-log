@@ -1,27 +1,5 @@
 .day-title {
   padding: 4px 16px 8px;
-  position: relative;
-}
-
-.day-title__display {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  text-align: left;
-  width: 100%;
-}
-
-.day-title__placeholder {
-  font-size: 13px;
-  color: var(--c-muted);
-  opacity: 0.6;
-  display: block;
-}
-
-.day-title__display:hover .day-title__placeholder {
-  opacity: 1;
-  color: var(--c-accent);
 }
 
 .day-title__pills {
@@ -38,69 +16,4 @@
   border: 1px solid var(--c-border);
   border-radius: 99px;
   padding: 4px 12px;
-}
-
-.day-title__display:hover .day-title__pill {
-  border-color: var(--c-accent);
-}
-
-/* Dropdown */
-.day-title__dropdown {
-  position: absolute;
-  top: 100%;
-  left: 16px;
-  right: 16px;
-  z-index: 20;
-  background: var(--c-surface);
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-md);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-  padding: 6px;
-  margin-top: 4px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  max-height: 280px;
-  overflow-y: auto;
-}
-
-.day-title__option {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: none;
-  border: none;
-  padding: 9px 10px;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  color: var(--c-text);
-  text-align: left;
-  cursor: pointer;
-}
-
-.day-title__option:hover {
-  background: var(--c-surface2, rgba(255,255,255,0.06));
-}
-
-.day-title__option--selected {
-  color: var(--c-accent);
-  font-weight: 600;
-}
-
-.day-title__checkbox {
-  width: 16px;
-  height: 16px;
-  border: 1px solid var(--c-border);
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  flex-shrink: 0;
-  color: var(--c-accent);
-}
-
-.day-title__option--selected .day-title__checkbox {
-  border-color: var(--c-accent);
-  background: rgba(108, 138, 255, 0.12);
 }
