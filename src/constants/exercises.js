@@ -77,5 +77,6 @@ export const FOREARM_EXERCISES = [
 
 export const CARDIO_EXERCISES = [
     'Running',
-    'Cycling'
+    'Cycling',
+    'Walking'
 ];
