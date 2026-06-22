@@ -1,7 +1,9 @@
 import React, { useState, useMemo, useRef } from 'react';
 import Select from 'react-select';
 import { CHEST_EXERCISES, BACK_EXERCISES, CORE_EXERCISES, LEG_EXERCISES, TRICEP_EXERCISES, BICEP_EXERCISES, BODYWEIGHT_EXERCISES, SHOULDER_EXERCISES, FOREARM_EXERCISES, CARDIO_EXERCISES } from '../constants/exercises';
+import { useExerciseHistory } from '../hooks/useExerciseHistory.js';
 import '../styles/WorkoutForm.css';
+import '../styles/ExerciseHistory.css';
 import '../styles/common.css';
 
 const EXERCISES = {
@@ -11,14 +13,42 @@ const EXERCISES = {
   Back: BACK_EXERCISES,
   Biceps: BICEP_EXERCISES,
   Legs: LEG_EXERCISES,
-  Shoulders: SHOULDER_EXERCISES, 
+  Shoulders: SHOULDER_EXERCISES,
   Core: CORE_EXERCISES,
-	Forearm: FOREARM_EXERCISES,
+  Forearm: FOREARM_EXERCISES,
 	Cardio: CARDIO_EXERCISES
 }
 
 const EQUIPMENT = ['Barbell','Dumbbell','Machine','Cable'];
 const muscleFor = (ex) => { for (const [g,list] of Object.entries(EXERCISES)) if (list.includes(ex)) return g; return 'Other'; };
+
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function LastSession({ exercise, onViewAll }) {
+  const { history, loading } = useExerciseHistory(exercise);
+  if (loading) return <div className="eh-inline"><span className="eh-inline__label">Loading last session…</span></div>;
+  if (!history.length) return null;
+  const last = history[0];
+  return (
+    <div className="eh-inline">
+      <div className="eh-inline__header">
+        <span className="eh-inline__label">Last session</span>
+        <span className="eh-inline__date">{formatDate(last.date)}</span>
+      </div>
+      <div className="eh-inline__sets">
+        {last.sets.map((s, i) => (
+          <span key={i} className="eh-inline__set">
+            {s.reps}×{s.weight ? `${s.weight}kg` : 'BW'}
+            {s.note && <em className="eh-inline__set-note">{s.note}</em>}
+          </span>
+        ))}
+      </div>
+      <button className="eh-inline__view-all" onClick={onViewAll}>View full history →</button>
+    </div>
+  );
+}
 
 function Counter({ value, min, max, onChange }) {
   return (
@@ -30,13 +60,12 @@ function Counter({ value, min, max, onChange }) {
   );
 }
 
-export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
-    
+export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onViewHistory }) {
   const [exercise, setExercise] = useState(editingWorkout?.exercise || '');
   const [equipment, setEquipment] = useState(editingWorkout?.equipment || '');
   const [equipmentType, setEquipmentType] = useState(editingWorkout?.equipmentType || '');
   const [setsList, setSetsList] = useState(
-    editingWorkout && Array.isArray(editingWorkout.sets) 
+    editingWorkout && Array.isArray(editingWorkout.sets)
       ? editingWorkout.sets.map(s => ({ reps: s.reps, weight: s.weight?.toString() || '', unit: s.unit || 'kg', note: s.note || '' }))
       : []
   );
@@ -46,19 +75,19 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
   const [notes, setNotes] = useState(editingWorkout?.notes || '');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-	const weightRef = useRef(null);
+  const weightRef = useRef(null);
 
-	const exerciseOptions = useMemo(
-  () =>
-    Object.entries(EXERCISES).map(([group, exercises]) => ({
+  const exerciseOptions = useMemo(
+    () => 
+			Object.entries(EXERCISES).map(([group, exercises]) => ({
       label: group,
-      options: exercises.map(exercise => ({
-        value: exercise,
-        label: exercise
-      }))
+      options: exercises.map(exercise => ({ 
+				value: exercise, 
+				label: exercise
+			 }))
     })),
-  []
-);
+    []
+  );
 
   const handleSubmit = async () => {
     if (!exercise) { setError('Select an exercise.'); return; }
@@ -68,16 +97,16 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
     setError('');
     setSubmitting(true);
     try {
-      const body = { 
+      const body = {
         date, 
-        exercise, 
-        muscleGroup: muscleFor(exercise), 
-        equipment, 
-        equipmentType, 
+				exercise, 
+				muscleGroup: muscleFor(exercise), 
+				equipment, 
+				equipmentType,
         sets: setsList.map(s => ({ ...s, weight: s.weight ? parseFloat(s.weight) : null })),
         unit: 'kg', 
-        notes 
-    };
+				notes
+      };
       if (editingWorkout) {
         await onUpdate(editingWorkout.id, body);
       } else {
@@ -92,9 +121,9 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
 
   const addSet = () => {
     if (!isExerciseBodyweight && !currentWeight) { 
-      setError('Enter weight before adding a set.'); 
-      return; 
-    }
+			setError('Enter weight before adding a set.');
+			 return; 
+			}
     setError('');
     setSetsList([...setsList, { reps: currentReps, weight: currentWeight, unit: 'kg', note: currentSetNote }]);
     setCurrentWeight('');
@@ -120,17 +149,17 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
       <div className="form-field">
         <label className="form-field__label">① Exercise</label>
         <Select
-					options={exerciseOptions}
-					value={
+          options={exerciseOptions}
+          value={
 							exercise
 							? { value: exercise, label: exercise }
 							: null
 					}
-					placeholder="Select an exercise..."
-					isSearchable
-					className="exercise-select"
-  				classNamePrefix="exercise"
-					onChange={(selectedOption) => {
+          placeholder="Select an exercise..."
+          isSearchable
+          className="exercise-select"
+          classNamePrefix="exercise"
+          onChange={(selectedOption) => {
 							const selectedExercise = selectedOption?.value || '';
 
 							setExercise(selectedExercise);
@@ -143,26 +172,28 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
 							}	
 					}}
         />
+        {/* Inline last session */}
+        {exercise && !editingWorkout && (
+          <LastSession exercise={exercise} onViewAll={() => onViewHistory(exercise)} />
+        )}
       </div>
 
       {/* Equipment */}
       <div className="form-field">
         <label className="form-field__label">② Equipment or Grip Used</label>
-        {!isExerciseBodyweight && <div className="form-field__equipment-group">
-          {EQUIPMENT.map(eq => (
-            <button
-              key={eq}
-              onClick={() => {
-                setEquipment(eq);
-								// Clear weight when selecting Bodyweight; leave as-is otherwise
-                if (eq === 'Bodyweight') setCurrentWeight('');
-              }}
-              className={`form-field__equipment-btn ${equipment === eq ? 'form-field__equipment-btn--active' : ''}`}>
-              {eq}
-            </button>
-          ))}
-        </div>}
-        <input type="text" value={equipmentType} onChange={e => setEquipmentType(e.target.value)} placeholder="Attachment/Grip (e.g., EZ bar, V bar)" maxLength={100} style={{ marginTop: '8px', width: '100%', padding: '8px', borderRadius: 'var(--radius-md)', border: '1px solid var(--c-border)', fontSize: '14px' }} />
+        {!isExerciseBodyweight && (
+          <div className="form-field__equipment-group">
+            {EQUIPMENT.map(eq => (
+              <button key={eq} onClick={() => { setEquipment(eq); if (eq === 'Bodyweight') setCurrentWeight(''); }}
+                className={`form-field__equipment-btn ${equipment === eq ? 'form-field__equipment-btn--active' : ''}`}>
+                {eq}
+              </button>
+            ))}
+          </div>
+        )}
+        <input type="text" value={equipmentType} onChange={e => setEquipmentType(e.target.value)}
+          placeholder="Attachment/Grip (e.g., EZ bar, V bar)" maxLength={100}
+          style={{ marginTop: '8px', width: '100%', padding: '8px', borderRadius: 'var(--radius-md)', border: '1px solid var(--c-border)', fontSize: '14px' }} />
       </div>
 
       {/* Add Set */}
@@ -175,29 +206,29 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
           </div>
           <div className="form-field__input-wrapper">
             <div className="counter__label">Weight kg</div>
-            <input
-						ref={weightRef}
-              type="number"
-              value={currentWeight}
-              onChange={e => setCurrentWeight(e.target.value)}
-              placeholder="e.g. 20"
-              min="0"
-              step="2.5"
-              className="workout-form__weight-input"
-            />
+            <input 
+						  ref={weightRef} 
+							type="number" 
+							value={currentWeight} 
+							onChange={e => setCurrentWeight(e.target.value)}
+              placeholder="e.g. 20" 
+							min="0" 
+							step="2.5" 
+							className="workout-form__weight-input" 
+						/>
           </div>
           <div>
             <button onClick={addSet} className="workout-form__add-set">+</button>
           </div>
         </div>
-        <input
-          type="text"
-          value={currentSetNote}
-          onChange={e => setCurrentSetNote(e.target.value)}
-					placeholder="Additional note"
-          maxLength={80}
-          className="workout-form__set-note-input"
-        />
+        <input 
+				  type="text" 
+				  value={currentSetNote} 
+				  onChange={e => setCurrentSetNote(e.target.value)}
+          placeholder="Additional note" 
+					maxLength={80} 
+					className="workout-form__set-note-input"
+				/>
       </div>
 
       {/* Sets List */}
@@ -207,35 +238,35 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
           <div className="sets-list">
             {setsList.map((set, idx) => (
               <div key={idx} className="sets-list__edit-inline">
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                      <div>
-                        <div className="counter__label" style={{ fontSize: '11px' }}>Reps</div>
-                        <Counter value={set.reps} min={1} max={100} onChange={(val) => updateSet(idx, 'reps', val)} />
-                      </div>
-                      <div style={{ flex: 1 }}>
-                        <div className="counter__label" style={{ fontSize: '11px' }}>Weight</div>
-                        <input
-                          type="number"
-                          value={set.weight}
-                          onChange={e => updateSet(idx, 'weight', e.target.value)}
-                          placeholder={isExerciseBodyweight ? 'optional' : 'e.g. 20'}
-                          min="0"
-                          step="2.5"
-                          disabled={isExerciseBodyweight}
-                          className="workout-form__weight-input"
-                        />
-                      </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                    <div>
+                      <div className="counter__label" style={{ fontSize: '11px' }}>Reps</div>
+                      <Counter value={set.reps} min={1} max={100} onChange={(val) => updateSet(idx, 'reps', val)} />
                     </div>
-                    {set.note && <input
-                      type="text"
-                      value={set.note || ''}
-                      onChange={e => updateSet(idx, 'note', e.target.value)}
-                      maxLength={80}
-                      className="workout-form__set-note-input"
-                    />}
+                    <div style={{ flex: 1 }}>
+                      <div className="counter__label" style={{ fontSize: '11px' }}>Weight</div>
+                      <input 
+												type="number" 
+												value={set.weight} 
+												onChange={e => updateSet(idx, 'weight', e.target.value)}
+                        placeholder={isExerciseBodyweight ? 'optional' : 'e.g. 20'} 
+												min="0" 
+												step="2.5"
+                        disabled={isExerciseBodyweight} 
+												className="workout-form__weight-input"
+												/>
+                    </div>
                   </div>
-                  <button onClick={() => removeSet(idx)} className="sets-list__remove" title="Remove set">✕</button>
+                  {set.note && <input 
+											type="text" 
+											value={set.note || ''} 
+											onChange={e => updateSet(idx, 'note', e.target.value)}
+                      maxLength={80} 
+											className="workout-form__set-note-input" 
+										/>}
+                </div>
+                <button onClick={() => removeSet(idx)} className="sets-list__remove" title="Remove set">✕</button>
               </div>
             ))}
           </div>
@@ -252,9 +283,9 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate }) {
 
       <div className="workout__actions">
         <button onClick={handleSubmit} disabled={submitting} className="workout-form__submit">
-         {submitting ? 'Saving...' : (editingWorkout ? '✎ Update' : '+ Log exercise')}
+          {submitting ? 'Saving...' : (editingWorkout ? '✎ Update' : '+ Log exercise')}
         </button>
-      </div> 
+      </div>
     </div>
   );
 }

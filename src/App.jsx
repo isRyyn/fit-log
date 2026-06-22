@@ -8,15 +8,17 @@ import WorkoutLog from './components/WorkoutLog.jsx';
 import LoginPage from './components/LoginPage.jsx';
 import WorkoutStats from './components/WorkoutStats.jsx';
 import DayTitle from './components/DayTitle.jsx';
+import ExerciseHistory from './components/ExerciseHistory.jsx';
 import './styles/App.css';
 import './styles/common.css';
 
-const TAB = { LOG: 'log', ADD: 'add', PROFILE: 'profile' };
+const TAB = { LOG: 'log', ADD: 'add', PROFILE: 'profile', HISTORY: 'history' };
 
 export default function App() {
   const { user, logout, isAuthenticated, loading: authLoading } = useAuth();
   const { date, setDate, workouts, stats, loading, error, addWorkout, removeWorkout, updateWorkout, reorderWorkouts } = useWorkouts();
   const [tab, setTab] = useState(TAB.LOG);
+  const [historyExercise, setHistoryExercise] = useState(null);
   const [editingWorkout, setEditingWorkout] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef(null);
@@ -107,7 +109,7 @@ export default function App() {
         )}
 
         {tab === TAB.ADD && (
-          <WorkoutForm date={date} onAdd={async (body) => { await addWorkout(body); setTab(TAB.LOG); }} editingWorkout={editingWorkout} onUpdate={async (id, body) => { await updateWorkout(id, body); setEditingWorkout(null); setTab(TAB.LOG); }} />
+          <WorkoutForm date={date} onAdd={async (body) => { await addWorkout(body); setTab(TAB.LOG); }} editingWorkout={editingWorkout} onUpdate={async (id, body) => { await updateWorkout(id, body); setEditingWorkout(null); setTab(TAB.LOG); }} onViewHistory={(ex) => { setHistoryExercise(ex); setTab(TAB.HISTORY); }} />
         )}
 
         {tab === TAB.PROFILE && (
@@ -132,6 +134,10 @@ export default function App() {
           </div>
         )}
       </div>
+
+      {tab === TAB.HISTORY && (
+        <ExerciseHistory exerciseName={historyExercise} onBack={() => { setTab(TAB.ADD); }} />
+      )}
 
       {/* Bottom tab bar */}
       <nav className="app__nav">

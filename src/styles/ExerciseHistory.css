@@ -1,0 +1,199 @@
+/* ── Container ── */
+.eh {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.eh__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px 8px;
+  border-bottom: 1px solid var(--c-border);
+  position: sticky;
+  top: 0;
+  background: var(--c-bg);
+  z-index: 5;
+}
+
+.eh__back {
+  background: none;
+  border: none;
+  color: var(--c-accent);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.eh__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--c-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.eh__empty {
+  font-size: 14px;
+  color: var(--c-muted);
+  text-align: center;
+  padding: 32px 16px;
+}
+
+.eh__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 16px;
+}
+
+/* ── Session card ── */
+.eh-card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.eh-card--highlight {
+  border-color: var(--c-accent);
+  background: rgba(108, 138, 255, 0.05);
+}
+
+.eh-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.eh-card__date {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--c-text);
+}
+
+.eh-card__badge {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--c-accent);
+  background: rgba(108, 138, 255, 0.12);
+  border-radius: 99px;
+  padding: 2px 8px;
+}
+
+.eh-card__equipment {
+  font-size: 11px;
+  color: var(--c-muted);
+  margin-left: auto;
+}
+
+.eh-card__sets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.eh-card__set {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-text);
+  background: var(--c-surface2, rgba(255,255,255,0.06));
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  padding: 5px 10px;
+}
+
+.eh-card__set-note {
+  font-size: 10px;
+  font-style: italic;
+  color: var(--c-muted);
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.eh-card__notes {
+  font-size: 12px;
+  color: var(--c-muted);
+  margin: 0;
+}
+
+/* ── Inline last session (shown in WorkoutForm) ── */
+.eh-inline {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.eh-inline__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.eh-inline__label {
+  font-size: 11px;
+  color: var(--c-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+.eh-inline__date {
+  font-size: 11px;
+  color: var(--c-muted);
+}
+
+.eh-inline__sets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.eh-inline__set {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--c-text);
+  background: var(--c-surface2, rgba(255,255,255,0.06));
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  padding: 4px 9px;
+}
+
+.eh-inline__set-note {
+  font-size: 10px;
+  font-style: italic;
+  color: var(--c-muted);
+  font-weight: 400;
+  margin-top: 1px;
+}
+
+.eh-inline__view-all {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  color: var(--c-accent);
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+}
