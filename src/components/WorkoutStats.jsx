@@ -1,5 +1,6 @@
 import React from 'react';
 import { useWorkoutStats } from '../hooks/useWorkoutStats.js';
+import PersonalRecords from './PersonalRecords.jsx';
 import '../styles/WorkoutStats.css';
 
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -22,11 +23,11 @@ function Heatmap({ activeDays }) {
     const isToday = dateStr === today.toISOString().split('T')[0];
     const isActive = activeDays.has(dateStr);
     cells.push(
-      <div
-        key={d}
-        className={`heatmap__cell ${isActive ? 'heatmap__cell--active' : ''} ${isToday ? 'heatmap__cell--today' : ''}`}
+      <div 
+        key={d} 
+        className={`heatmap__cell ${isActive ? 'heatmap__cell--active' : ''} ${isToday ? 'heatmap__cell--today' : ''}`} 
         title={dateStr}
-      >
+     >
         <span className="heatmap__day-num">{d}</span>
       </div>
     );
@@ -50,9 +51,13 @@ export default function WorkoutStats() {
 
   return (
     <div className="workout-stats">
-      <p className="workout-stats__section-label">Stats</p>
+
+      {/* Personal Records */}
+      <p className="workout-stats__section-label">Personal Records</p>
+      <PersonalRecords />
 
       {/* Stat cards */}
+      <p className="workout-stats__section-label" style={{ marginTop: 20 }}>This Month</p>
       <div className="workout-stats__grid">
         <div className="workout-stats__card">
           <span className="workout-stats__value">{stats.daysThisMonth}</span>
@@ -75,7 +80,7 @@ export default function WorkoutStats() {
       {/* Session title breakdown */}
       {stats.titleSummary.length > 0 && (
         <div className="workout-stats__titles">
-          <span className="workout-stats__top-muscle-label">This month's sessions</span>
+          <span className="workout-stats__top-muscle-label">Sessions this month</span>
           <div className="workout-stats__title-pills">
             {stats.titleSummary.map(([title, count]) => (
               <span key={title} className="workout-stats__title-pill">
