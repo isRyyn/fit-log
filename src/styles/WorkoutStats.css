@@ -169,3 +169,13 @@
   font-size: 12px;
   color: var(--c-accent);
 }
+
+.personal-records-label {
+  margin-top: 15px;
+  font-size: 14px;
+
+  i {
+    color: var(--c-accent);
+    margin-left: 10px;
+  }
+}

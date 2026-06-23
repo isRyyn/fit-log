@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useWorkoutStats } from '../hooks/useWorkoutStats.js';
 import PersonalRecords from './PersonalRecords.jsx';
 import '../styles/WorkoutStats.css';
@@ -44,7 +44,8 @@ function Heatmap({ activeDays }) {
 }
 
 export default function WorkoutStats() {
-  const { stats, loading } = useWorkoutStats();
+  const { stats, loading } = useWorkoutStats(); 
+  const [ records, setRecords ] = useState(false);
 
   if (loading) return <div className="workout-stats__loading">Loading stats…</div>;
   if (!stats) return null;
@@ -53,8 +54,12 @@ export default function WorkoutStats() {
     <div className="workout-stats">
 
       {/* Personal Records */}
-      <p className="workout-stats__section-label">Personal Records</p>
-      <PersonalRecords />
+      <p className="workout-stats__section-label personal-records-label">
+        Personal Records
+        {!records && <i class="fa-solid fa-eye" onClick={() => setRecords(true)}></i>}
+        {records && <i class="fa-solid fa-eye-slash" onClick={() => setRecords(false)}></i>}
+        </p>
+      {records && <PersonalRecords />}
 
       {/* Stat cards */}
       <p className="workout-stats__section-label" style={{ marginTop: 20 }}>This Month</p>

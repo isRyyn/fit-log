@@ -1,7 +1,7 @@
 .pr {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 5px;
 }
 
 .pr__loading {
@@ -16,10 +16,9 @@
   background: var(--c-surface);
   border: 1px solid var(--c-border);
   border-radius: var(--radius-lg);
-  padding: 14px 16px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
 }
 
 .pr-row__exercise {
@@ -38,6 +37,7 @@
   text-align: left;
   display: flex;
   align-items: baseline;
+  justify-content: center;
   gap: 10px;
   width: 100%;
 }
@@ -100,18 +100,12 @@
 }
 
 .pr-row__input {
-  background: var(--c-surface2, rgba(255,255,255,0.06));
-  border: 1px solid var(--c-border);
-  border-radius: var(--radius-md);
-  color: var(--c-text);
   font-size: 15px;
-  padding: 7px 10px;
-  width: 72px;
-  outline: none;
+  width: 60px !important;
 }
 
 .pr-row__input--date {
-  width: 140px;
+  width: 140px !important;
   font-size: 13px;
 }
 
