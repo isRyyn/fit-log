@@ -168,17 +168,7 @@
   font-family: var(--font-mono);
   font-size: 12px;
   color: var(--c-accent);
-}
-
-.personal-records-label {
-  margin-top: 15px;
-  font-size: 14px;
-
-  i {
-    color: var(--c-accent);
-    margin-left: 10px;
-  }
-}      
+}  
 
 /* ── Heatmap navigation ── */
 .heatmap__nav {
@@ -255,4 +245,32 @@
 
 .heatmap__nav-btn:not(:disabled):hover {
   background: var(--c-surface2, rgba(255,255,255,0.08));
+}
+
+/* ── Personal Records collapse animation ── */
+.personal-records-label {
+  margin-top: 15px;
+  font-size: 14px;
+
+  i {
+    color: var(--c-accent);
+    margin-left: 10px;
+  }
+}    
+
+.pr-collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.35s ease, opacity 0.3s ease;
+}
+
+.pr-collapse--open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+/* Inner div needed for grid-template-rows trick */
+.pr-collapse > * {
+  overflow: hidden;
 }

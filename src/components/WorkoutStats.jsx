@@ -69,7 +69,9 @@ export default function WorkoutStats() {
         {!records && <i className="fa-solid fa-eye" onClick={() => setRecords(true)}></i>}
         {records && <i className="fa-solid fa-eye-slash" onClick={() => setRecords(false)}></i>}
         </p>
-      {records && <PersonalRecords />}
+      <div className={`pr-collapse ${records ? 'pr-collapse--open' : ''}`}>
+        <PersonalRecords />
+      </div>
 
       {/* Stat cards */}
       <p className="workout-stats__section-label" style={{ marginTop: 20 }}>This Month</p>
