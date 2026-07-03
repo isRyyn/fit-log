@@ -6,10 +6,9 @@ import '../styles/WorkoutStats.css';
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAY_LABELS = ['S','M','T','W','T','F','S'];
 
-function Heatmap({ activeDays }) {
+function Heatmap({ allActiveDays, year, month }) {
   const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth();
+  const todayStr = today.toISOString().split('T')[0];
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const firstDayOfWeek = new Date(year, month, 1).getDay();
 
@@ -20,14 +19,8 @@ function Heatmap({ activeDays }) {
   }
   for (let d = 1; d <= daysInMonth; d++) {
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-    const isToday = dateStr === today.toISOString().split('T')[0];
-    const isActive = activeDays.has(dateStr);
     cells.push(
-      <div 
-        key={d} 
-        className={`heatmap__cell ${isActive ? 'heatmap__cell--active' : ''} ${isToday ? 'heatmap__cell--today' : ''}`} 
-        title={dateStr}
-     >
+      <div key={d} className={`heatmap__cell ${allActiveDays.has(dateStr) ? 'heatmap__cell--active' : ''} ${dateStr === todayStr ? 'heatmap__cell--today' : ''}`} title={dateStr}>
         <span className="heatmap__day-num">{d}</span>
       </div>
     );
@@ -44,8 +37,25 @@ function Heatmap({ activeDays }) {
 }
 
 export default function WorkoutStats() {
-  const { stats, loading } = useWorkoutStats(); 
+  const { stats, loading } = useWorkoutStats();
   const [ records, setRecords ] = useState(false);
+  const now = new Date();
+  const [heatmapYear, setHeatmapYear] = useState(now.getFullYear());
+  const [heatmapMonth, setHeatmapMonth] = useState(now.getMonth());
+
+  const goToPrev = () => {
+    if (heatmapMonth === 0) { setHeatmapMonth(11); setHeatmapYear(y => y - 1); }
+    else setHeatmapMonth(m => m - 1);
+  };
+
+  const goToNext = () => {
+    const isCurrentMonth = heatmapYear === now.getFullYear() && heatmapMonth === now.getMonth();
+    if (isCurrentMonth) return;
+    if (heatmapMonth === 11) { setHeatmapMonth(0); setHeatmapYear(y => y + 1); }
+    else setHeatmapMonth(m => m + 1);
+  };
+
+  const isCurrentMonth = heatmapYear === now.getFullYear() && heatmapMonth === now.getMonth();
 
   if (loading) return <div className="workout-stats__loading">Loading stats…</div>;
   if (!stats) return null;
@@ -56,8 +66,8 @@ export default function WorkoutStats() {
       {/* Personal Records */}
       <p className="workout-stats__section-label personal-records-label">
         Personal Records
-        {!records && <i class="fa-solid fa-eye" onClick={() => setRecords(true)}></i>}
-        {records && <i class="fa-solid fa-eye-slash" onClick={() => setRecords(false)}></i>}
+        {!records && <i className="fa-solid fa-eye" onClick={() => setRecords(true)}></i>}
+        {records && <i className="fa-solid fa-eye-slash" onClick={() => setRecords(false)}></i>}
         </p>
       {records && <PersonalRecords />}
 
@@ -82,7 +92,7 @@ export default function WorkoutStats() {
         </div>
       </div>
 
-      {/* Session title breakdown */}
+      {/* Session breakdown */}
       {stats.titleSummary.length > 0 && (
         <div className="workout-stats__titles">
           <span className="workout-stats__top-muscle-label">Sessions this month</span>
@@ -96,11 +106,14 @@ export default function WorkoutStats() {
         </div>
       )}
 
-      {/* Heatmap */}
-      <p className="workout-stats__section-label" style={{ marginTop: 20 }}>
-        {MONTH_NAMES[new Date().getMonth()]} {new Date().getFullYear()}
-      </p>
-      <Heatmap activeDays={stats.activeDaysThisMonth} />
+      {/* Heatmap with navigation */}
+      <div className="heatmap__nav">
+        <button className="heatmap__nav-btn" onClick={goToPrev}>‹</button>
+        <span className="heatmap__nav-label">{MONTH_NAMES[heatmapMonth]} {heatmapYear}</span>
+        <button className="heatmap__nav-btn" onClick={goToNext} disabled={isCurrentMonth}>›</button>
+      </div>
+      <Heatmap allActiveDays={stats.allActiveDays} year={heatmapYear} month={heatmapMonth} />
+
     </div>
   );
 }

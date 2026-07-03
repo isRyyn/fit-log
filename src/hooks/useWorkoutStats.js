@@ -19,22 +19,14 @@ function computeStats(workouts) {
   // Current streak
   let currentStreak = 0;
   if (allDays.length > 0) {
-    const lastDay = allDays[allDays.length - 1];
-    const lastDate = new Date(lastDay);
+    const lastDate = new Date(allDays[allDays.length - 1]);
     const diffFromToday = Math.floor((today - lastDate) / 86400000);
-
-    // Streak is alive if last workout was today or yesterday 
     if (diffFromToday <= 1) {
       currentStreak = 1;
       for (let i = allDays.length - 2; i >= 0; i--) {
-        const curr = new Date(allDays[i + 1]);
-        const prev = new Date(allDays[i]);
-        const gap = Math.floor((curr - prev) / 86400000);
-        if (gap === 1) {
-          currentStreak++;
-        } else {
-          break;
-        }
+        const gap = Math.floor((new Date(allDays[i + 1]) - new Date(allDays[i])) / 86400000);
+        if (gap === 1) currentStreak++;
+        else break;
       }
     }
   }
@@ -43,23 +35,16 @@ function computeStats(workouts) {
   let longestStreak = 0;
   let runningStreak = allDays.length > 0 ? 1 : 0;
   for (let i = 1; i < allDays.length; i++) {
-    const curr = new Date(allDays[i]);
-    const prev = new Date(allDays[i - 1]);
-    const gap = Math.floor((curr - prev) / 86400000);
-    if (gap === 1) {
-      runningStreak++;
-    } else {
-      longestStreak = Math.max(longestStreak, runningStreak);
-      runningStreak = 1;
-    }
+    const gap = Math.floor((new Date(allDays[i]) - new Date(allDays[i - 1])) / 86400000);
+    if (gap === 1) runningStreak++;
+    else { longestStreak = Math.max(longestStreak, runningStreak); runningStreak = 1; }
   }
   longestStreak = Math.max(longestStreak, runningStreak);
 
-  // Active days set for heatmap
-  const activeDaysThisMonth = new Set(thisMonthDays);
+  // All active days as a Set (used by heatmap for any month)
+  const allActiveDays = new Set(allDays);
 
-  // Category tag counts for this month, derived from muscleGroup of exercises logged.
-  // Group by date first so a category logged twice in one day only counts once for that day.
+  // Category counts for this month
   const categoriesByDate = {};
   for (const w of workouts) {
     const dt = new Date(w.date);
@@ -82,7 +67,7 @@ function computeStats(workouts) {
     longestStreak,
     totalWorkouts: workouts.length,
     titleSummary,
-    activeDaysThisMonth,
+    allActiveDays,
   };
 }
 
