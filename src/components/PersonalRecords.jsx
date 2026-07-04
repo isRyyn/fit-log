@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { usePersonalRecords, PR_EXERCISES } from '../hooks/usePersonalRecords.js';
 import '../styles/PersonalRecords.css';
 
-function formatDate(dateStr) {
+function daysSince(dateStr) {
   if (!dateStr) return '';
-  const [y, m, d] = dateStr.split('-');
-  return `${d}/${m}/${y}`;
+  const diff = Math.floor((new Date() - new Date(dateStr)) / 86400000);
+  if (diff === 0) return 'today';
+  if (diff === 1) return '1 day ago';
+  return `${diff} days ago`;
 }
 
 function PRRow({ exercise, record, onSave, onClear }) {
@@ -83,7 +85,7 @@ function PRRow({ exercise, record, onSave, onClear }) {
           {record
             ? <>
                 <span className="pr-row__weight">{record.weight}kg × {record.reps}</span>
-                <span className="pr-row__date">Updated {formatDate(record.date)}</span>
+                <span className="pr-row__date">Updated {daysSince(record.date)}</span>
               </>
             : <span className="pr-row__empty">— tap to set</span>
           }
