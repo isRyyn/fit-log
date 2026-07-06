@@ -44,6 +44,16 @@ function computeStats(workouts) {
   // All active days as a Set (used by heatmap for any month)
   const allActiveDays = new Set(allDays);
 
+  // Days on break — 0 if streak is alive, else days since last workout
+  // Use local date strings to avoid UTC timezone offset issues
+  const todayLocal = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const daysOnBreak = allDays.length === 0 ? 0 : (() => {
+    const [ly, lm, ld] = allDays[allDays.length - 1].split('-').map(Number);
+    const lastLocal = new Date(ly, lm - 1, ld);
+    const diff = Math.floor((todayLocal - lastLocal) / 86400000);
+    return diff <= 1 ? 0 : diff;
+  })();
+
   // Category counts for this month
   const categoriesByDate = {};
   for (const w of workouts) {
@@ -66,6 +76,7 @@ function computeStats(workouts) {
     currentStreak,
     longestStreak,
     totalWorkouts: workouts.length,
+    daysOnBreak,
     titleSummary,
     allActiveDays,
   };

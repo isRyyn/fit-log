@@ -91,6 +91,7 @@
   flex-wrap: wrap;
   gap: 5px;
   margin-bottom: var(--sets-margin, 6px);
+  width: 110%;
 }
 
 .workout-entry__set {

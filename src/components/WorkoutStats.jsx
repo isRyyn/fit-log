@@ -81,8 +81,8 @@ export default function WorkoutStats() {
           <span className="workout-stats__label">Days this month</span>
         </div>
         <div className="workout-stats__card">
-          <span className="workout-stats__value">{stats.currentStreak}</span>
-          <span className="workout-stats__label">Current streak</span>
+          <span className="workout-stats__value">{stats.daysOnBreak}</span>
+          <span className="workout-stats__label">Days on break</span>
         </div>
         <div className="workout-stats__card">
           <span className="workout-stats__value">{stats.longestStreak}</span>

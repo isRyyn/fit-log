@@ -165,16 +165,6 @@
   text-transform: uppercase;
 }
 
-.app__section-badge {
-  font-size: 11px;
-  font-family: var(--font-mono);
-  background: var(--c-surface);
-  border: 1px solid var(--c-border);
-  border-radius: 99px;
-  padding: 2px 9px;
-  color: var(--c-muted);
-}
-
 .app__error-banner {
   margin: 0 16px 12px;
   background: var(--c-danger-bg);

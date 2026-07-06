@@ -100,9 +100,6 @@ export default function App() {
             <DayTitle workouts={workouts} />
             <div className="app__section-header">
               <span className="app__section-title">Today's log</span>
-              <span className="app__section-badge">
-                {workouts.length} {workouts.length === 1 ? 'entry' : 'entries'}
-              </span>
             </div>
             <WorkoutLog workouts={workouts} onDelete={removeWorkout} onEdit={(w) => { setEditingWorkout(w); setTab(TAB.ADD); }} onReorder={reorderWorkouts} loading={loading} />
           </>
