@@ -100,7 +100,7 @@
     outline: none !important;
 }
 
-.wt__input--date { width: 148px !important; font-size: 13px; }
+.wt__input--date { width: 135px !important; font-size: 13px; }
 .wt__input:focus { border-color: var(--c-accent); }
 
 .wt__add-btn {
