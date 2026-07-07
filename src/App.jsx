@@ -7,6 +7,7 @@ import WorkoutForm from './components/WorkoutForm.jsx';
 import WorkoutLog from './components/WorkoutLog.jsx';
 import LoginPage from './components/LoginPage.jsx';
 import WorkoutStats from './components/WorkoutStats.jsx';
+import WeightTracker from './components/WeightTracker.jsx';
 import DayTitle from './components/DayTitle.jsx';
 import PRToast from './components/PRToast.jsx';
 import { usePersonalRecords, PR_EXERCISES } from './hooks/usePersonalRecords.js';
@@ -22,6 +23,7 @@ export default function App() {
   const [tab, setTab] = useState(TAB.LOG);
   const [historyExercise, setHistoryExercise] = useState(null);
   const [pendingPR, setPendingPR] = useState(null);
+  const [weightOpen, setWeightOpen] = useState(false);
   const { records, saveRecord } = usePersonalRecords();
   const [editingWorkout, setEditingWorkout] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
@@ -111,29 +113,29 @@ export default function App() {
 
         {tab === TAB.ADD && (
           <WorkoutForm date={date} onAdd={async (body) => {
-                  await addWorkout(body);
-                  setTab(TAB.LOG);
+            await addWorkout(body);
+            setTab(TAB.LOG);
                   // PR detection — only for tracked exercises
-                  if (PR_EXERCISES.includes(body.exercise) && Array.isArray(body.sets)) {
-                    const best = body.sets.reduce((top, s) => {
-                      const w = parseFloat(s.weight) || 0;
-                      const r = parseInt(s.reps) || 0;
-                      if (!top) return { weight: w, reps: r };
-                      if (w > top.weight) return { weight: w, reps: r };
-                      if (w === top.weight && r > top.reps) return { weight: w, reps: r };
-                      return top;
-                    }, null);
-                    if (best && best.weight > 0) {
-                      const current = records[body.exercise];
-                      const isNewPR = !current
-                        || best.weight > current.weight
-                        || (best.weight === current.weight && best.reps > current.reps);
-                      if (isNewPR) {
-                        setPendingPR({ exercise: body.exercise, weight: best.weight, reps: best.reps });
-                      }
-                    }
-                  }
-                }} editingWorkout={editingWorkout} onUpdate={async (id, body) => { await updateWorkout(id, body); setEditingWorkout(null); setTab(TAB.LOG); }} onViewHistory={(ex) => { setHistoryExercise(ex); setTab(TAB.HISTORY); }} />
+            if (PR_EXERCISES.includes(body.exercise) && Array.isArray(body.sets)) {
+              const best = body.sets.reduce((top, s) => {
+                const w = parseFloat(s.weight) || 0;
+                const r = parseInt(s.reps) || 0;
+                if (!top) return { weight: w, reps: r };
+                if (w > top.weight) return { weight: w, reps: r };
+                if (w === top.weight && r > top.reps) return { weight: w, reps: r };
+                return top;
+              }, null);
+              if (best && best.weight > 0) {
+                const current = records[body.exercise];
+                const isNewPR = !current
+                  || best.weight > current.weight
+                  || (best.weight === current.weight && best.reps > current.reps);
+                if (isNewPR) {
+                  setPendingPR({ exercise: body.exercise, weight: best.weight, reps: best.reps });
+                }
+              }
+            }
+          }} editingWorkout={editingWorkout} onUpdate={async (id, body) => { await updateWorkout(id, body); setEditingWorkout(null); setTab(TAB.LOG); }} onViewHistory={(ex) => { setHistoryExercise(ex); setTab(TAB.HISTORY); }} />
         )}
 
         {tab === TAB.PROFILE && (
@@ -148,12 +150,24 @@ export default function App() {
               <div style={{ background:'var(--c-surface)', border:'1px solid var(--c-border)', borderRadius:'var(--radius-lg)', padding:'14px 16px' }}>
                 <p style={{ fontSize:14, color:'var(--c-text)', fontWeight:500, marginBottom:4 }}>Firestore — Cloud</p>
                 <p style={{ fontSize:13, color:'var(--c-muted)' }}>
-                    {user?.isAnonymous ? 
-                    'Guest data will be lost if you sign out. Please sign in to save your data.' : 
+                  {user?.isAnonymous ?
+                    'Guest data will be lost if you sign out. Please sign in to save your data.' :
                     'All workouts are synced to the cloud in real-time. Access them from any device.'}
                 </p>
               </div>
               <WorkoutStats />
+
+              {/* Body Weight — collapsible */}
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', margin:'20px 0 10px' }}>
+                <p style={{ fontSize:14, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--c-muted)', fontWeight:600, margin:0 }}>Body Weight</p>
+                <button onClick={() => setWeightOpen(o => !o)} style={{ background:'none', border:'none', cursor:'pointer', color:'var(--c-accent)', fontSize:18, padding:0, display:'flex', alignItems:'center' }}>
+                  <i className={`fa-solid ${weightOpen ? 'fa-circle-chevron-up' : 'fa-circle-chevron-down'}`} />
+                </button>
+              </div>
+              <div className={`pr-collapse ${weightOpen ? 'pr-collapse--open' : ''}`}>
+                <WeightTracker />
+              </div>
+
             </div>
           </div>
         )}
