@@ -8,6 +8,8 @@ import WorkoutLog from './components/WorkoutLog.jsx';
 import LoginPage from './components/LoginPage.jsx';
 import WorkoutStats from './components/WorkoutStats.jsx';
 import DayTitle from './components/DayTitle.jsx';
+import PRToast from './components/PRToast.jsx';
+import { usePersonalRecords, PR_EXERCISES } from './hooks/usePersonalRecords.js';
 import ExerciseHistory from './components/ExerciseHistory.jsx';
 import './styles/App.css';
 import './styles/common.css';
@@ -19,6 +21,8 @@ export default function App() {
   const { date, setDate, workouts, stats, loading, error, addWorkout, removeWorkout, updateWorkout, reorderWorkouts } = useWorkouts();
   const [tab, setTab] = useState(TAB.LOG);
   const [historyExercise, setHistoryExercise] = useState(null);
+  const [pendingPR, setPendingPR] = useState(null);
+  const { records, saveRecord } = usePersonalRecords();
   const [editingWorkout, setEditingWorkout] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef(null);
@@ -106,7 +110,30 @@ export default function App() {
         )}
 
         {tab === TAB.ADD && (
-          <WorkoutForm date={date} onAdd={async (body) => { await addWorkout(body); setTab(TAB.LOG); }} editingWorkout={editingWorkout} onUpdate={async (id, body) => { await updateWorkout(id, body); setEditingWorkout(null); setTab(TAB.LOG); }} onViewHistory={(ex) => { setHistoryExercise(ex); setTab(TAB.HISTORY); }} />
+          <WorkoutForm date={date} onAdd={async (body) => {
+                  await addWorkout(body);
+                  setTab(TAB.LOG);
+                  // PR detection — only for tracked exercises
+                  if (PR_EXERCISES.includes(body.exercise) && Array.isArray(body.sets)) {
+                    const best = body.sets.reduce((top, s) => {
+                      const w = parseFloat(s.weight) || 0;
+                      const r = parseInt(s.reps) || 0;
+                      if (!top) return { weight: w, reps: r };
+                      if (w > top.weight) return { weight: w, reps: r };
+                      if (w === top.weight && r > top.reps) return { weight: w, reps: r };
+                      return top;
+                    }, null);
+                    if (best && best.weight > 0) {
+                      const current = records[body.exercise];
+                      const isNewPR = !current
+                        || best.weight > current.weight
+                        || (best.weight === current.weight && best.reps > current.reps);
+                      if (isNewPR) {
+                        setPendingPR({ exercise: body.exercise, weight: best.weight, reps: best.reps });
+                      }
+                    }
+                  }
+                }} editingWorkout={editingWorkout} onUpdate={async (id, body) => { await updateWorkout(id, body); setEditingWorkout(null); setTab(TAB.LOG); }} onViewHistory={(ex) => { setHistoryExercise(ex); setTab(TAB.HISTORY); }} />
         )}
 
         {tab === TAB.PROFILE && (
@@ -134,6 +161,18 @@ export default function App() {
 
       {tab === TAB.HISTORY && (
         <ExerciseHistory exerciseName={historyExercise} onBack={() => { setTab(TAB.ADD); }} />
+      )}
+
+      {pendingPR && (
+        <PRToast
+          pr={pendingPR}
+          onSave={async () => {
+            const today = new Date().toISOString().split('T')[0];
+            await saveRecord(pendingPR.exercise, pendingPR.weight, pendingPR.reps, today);
+            setPendingPR(null);
+          }}
+          onDismiss={() => setPendingPR(null)}
+        />
       )}
 
       {/* Bottom tab bar */}
