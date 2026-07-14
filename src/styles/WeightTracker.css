@@ -96,11 +96,11 @@
     border: 1px solid var(--c-border) !important;
     font-size: 15px;
     padding: 8px 10px !important;
-    width: 100px !important;
+    width: 90px !important;
     outline: none !important;
 }
 
-.wt__input--date { width: 135px !important; font-size: 13px; }
+.wt__input--date { width: 125px !important; font-size: 13px; }
 .wt__input:focus { border-color: var(--c-accent); }
 
 .wt__add-btn {
