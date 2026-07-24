@@ -79,7 +79,7 @@
 }
 
 .counter__value {
-  width: 48px;
+  width: 50px !important;
   text-align: center;
   font-size: 16px;
   font-weight: 500;

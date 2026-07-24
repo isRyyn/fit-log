@@ -16,7 +16,7 @@ const EXERCISES = {
   Shoulders: SHOULDER_EXERCISES,
   Core: CORE_EXERCISES,
   Forearm: FOREARM_EXERCISES,
-	Cardio: CARDIO_EXERCISES
+  Cardio: CARDIO_EXERCISES
 }
 
 const EQUIPMENT = ['Barbell','Dumbbell','Machine','Cable'];
@@ -26,7 +26,7 @@ function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-function LastSession({ exercise, onViewAll }) {
+function LastSession({ exercise, onViewAll, onRepeat }) {
   const { history, loading } = useExerciseHistory(exercise);
   if (loading) return <div className="eh-inline"><span className="eh-inline__label">Loading last session…</span></div>;
   if (!history.length) return null;
@@ -45,7 +45,10 @@ function LastSession({ exercise, onViewAll }) {
           </span>
         ))}
       </div>
-      <button className="eh-inline__view-all" onClick={onViewAll}>View full history →</button>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px' }}>
+        <button className="eh-inline__view-all" onClick={onViewAll}>View full history →</button>
+        <button className="eh-inline__view-all" onClick={() => onRepeat(last.sets)}>↩ Repeat last session</button>
+      </div>
     </div>
   );
 }
@@ -54,7 +57,7 @@ function Counter({ value, min, max, onChange }) {
   return (
     <div className="counter">
       <button onClick={() => onChange(Math.max(min, value-1))} className="counter__btn">−</button>
-      <span className="counter__value">{value}</span>
+      <input type="number" className="counter__value" value={value} onChange={(e) => onChange(parseInt(e.target.value))} />
       <button onClick={() => onChange(Math.min(max, value+1))} className="counter__btn">+</button>
     </div>
   );
@@ -78,16 +81,14 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
   const weightRef = useRef(null);
 
   const exerciseOptions = useMemo(
-    () => 
-			Object.entries(EXERCISES).map(([group, exercises]) => ({
+    () => Object.entries(EXERCISES).map(([group, exercises]) => ({
       label: group,
-      options: exercises.map(exercise => ({ 
-				value: exercise, 
-				label: exercise
-			 }))
+      options: exercises.map(exercise => ({ value: exercise, label: exercise }))
     })),
     []
   );
+
+  const isExerciseBodyweight = exercise && (EXERCISES.Bodyweight.includes(exercise) || EXERCISES.Core.includes(exercise) || EXERCISES.Cardio.includes(exercise));
 
   const handleSubmit = async () => {
     if (!exercise) { setError('Select an exercise.'); return; }
@@ -98,14 +99,9 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
     setSubmitting(true);
     try {
       const body = {
-        date, 
-				exercise, 
-				muscleGroup: muscleFor(exercise), 
-				equipment, 
-				equipmentType,
+        date, exercise, muscleGroup: muscleFor(exercise), equipment, equipmentType,
         sets: setsList.map(s => ({ ...s, weight: s.weight ? parseFloat(s.weight) : null })),
-        unit: 'kg', 
-				notes
+        unit: 'kg', notes
       };
       if (editingWorkout) {
         await onUpdate(editingWorkout.id, body);
@@ -117,13 +113,8 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
     finally { setSubmitting(false); }
   };
 
-	const isExerciseBodyweight = exercise && (EXERCISES.Bodyweight.includes(exercise) || EXERCISES.Core.includes(exercise) || EXERCISES.Cardio.includes(exercise));
-
   const addSet = () => {
-    if (!isExerciseBodyweight && !currentWeight) { 
-			setError('Enter weight before adding a set.');
-			 return; 
-			}
+    if (!isExerciseBodyweight && !currentWeight) { setError('Enter weight before adding a set.'); return; }
     setError('');
     setSetsList([...setsList, { reps: currentReps, weight: currentWeight, unit: 'kg', note: currentSetNote }]);
     setCurrentWeight('');
@@ -131,14 +122,21 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
     setCurrentSetNote('');
   };
 
-  const removeSet = (index) => {
-    setSetsList(setsList.filter((_, i) => i !== index));
-  };
+  const removeSet = (index) => setSetsList(setsList.filter((_, i) => i !== index));
 
   const updateSet = (index, field, value) => {
     const updatedList = [...setsList];
     updatedList[index][field] = value;
     setSetsList(updatedList);
+  };
+
+  const handleRepeat = (sets) => {
+    setSetsList(sets.map(s => ({
+      reps: s.reps,
+      weight: s.weight?.toString() || '',
+      unit: s.unit || 'kg',
+      note: s.note || ''
+    })));
   };
 
   return (
@@ -150,31 +148,29 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
         <label className="form-field__label">① Exercise</label>
         <Select
           options={exerciseOptions}
-          value={
-							exercise
-							? { value: exercise, label: exercise }
-							: null
-					}
+          value={exercise ? { value: exercise, label: exercise } : null}
           placeholder="Select an exercise..."
           isSearchable
           className="exercise-select"
           classNamePrefix="exercise"
           onChange={(selectedOption) => {
-							const selectedExercise = selectedOption?.value || '';
-
-							setExercise(selectedExercise);
-
-							if (BODYWEIGHT_EXERCISES.includes(selectedExercise) || CORE_EXERCISES.includes(selectedExercise) || CARDIO_EXERCISES.includes(selectedExercise)) {
-								setEquipment('Bodyweight');
-							} else {
-								setEquipment('Barbell');
-								weightRef.current?.focus();
-							}	
-					}}
+            const selectedExercise = selectedOption?.value || '';
+            setExercise(selectedExercise);
+            setSetsList([]); // clear sets when exercise changes
+            if (BODYWEIGHT_EXERCISES.includes(selectedExercise) || CORE_EXERCISES.includes(selectedExercise) || CARDIO_EXERCISES.includes(selectedExercise)) {
+              setEquipment('Bodyweight');
+            } else {
+              setEquipment('Barbell');
+              weightRef.current?.focus();
+            }
+          }}
         />
-        {/* Inline last session */}
         {exercise && !editingWorkout && (
-          <LastSession exercise={exercise} onViewAll={() => onViewHistory(exercise)} />
+          <LastSession
+            exercise={exercise}
+            onViewAll={() => onViewHistory(exercise)}
+            onRepeat={handleRepeat}
+          />
         )}
       </div>
 
@@ -206,29 +202,15 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
           </div>
           <div className="form-field__input-wrapper">
             <div className="counter__label">Weight kg</div>
-            <input 
-						  ref={weightRef} 
-							type="number" 
-							value={currentWeight} 
-							onChange={e => setCurrentWeight(e.target.value)}
-              placeholder="e.g. 20" 
-							min="0" 
-							step="2.5" 
-							className="workout-form__weight-input" 
-						/>
+            <input ref={weightRef} type="number" value={currentWeight} onChange={e => setCurrentWeight(e.target.value)}
+              placeholder="e.g. 20" min="0" step="2.5" className="workout-form__weight-input" />
           </div>
           <div>
             <button onClick={addSet} className="workout-form__add-set">+</button>
           </div>
         </div>
-        <input 
-				  type="text" 
-				  value={currentSetNote} 
-				  onChange={e => setCurrentSetNote(e.target.value)}
-          placeholder="Additional note" 
-					maxLength={80} 
-					className="workout-form__set-note-input"
-				/>
+        <input type="text" value={currentSetNote} onChange={e => setCurrentSetNote(e.target.value)}
+          placeholder="Additional note" maxLength={80} className="workout-form__set-note-input" />
       </div>
 
       {/* Sets List */}
@@ -246,25 +228,13 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
                     </div>
                     <div style={{ flex: 1 }}>
                       <div className="counter__label" style={{ fontSize: '11px' }}>Weight</div>
-                      <input 
-												type="number" 
-												value={set.weight} 
-												onChange={e => updateSet(idx, 'weight', e.target.value)}
-                        placeholder={isExerciseBodyweight ? 'optional' : 'e.g. 20'} 
-												min="0" 
-												step="2.5"
-                        disabled={isExerciseBodyweight} 
-												className="workout-form__weight-input"
-												/>
+                      <input type="number" value={set.weight} onChange={e => updateSet(idx, 'weight', e.target.value)}
+                        placeholder={isExerciseBodyweight ? 'optional' : 'e.g. 20'} min="0" step="2.5"
+                        disabled={isExerciseBodyweight} className="workout-form__weight-input" />
                     </div>
                   </div>
-                  {set.note && <input 
-											type="text" 
-											value={set.note || ''} 
-											onChange={e => updateSet(idx, 'note', e.target.value)}
-                      maxLength={80} 
-											className="workout-form__set-note-input" 
-										/>}
+                  {set.note && <input type="text" value={set.note || ''} onChange={e => updateSet(idx, 'note', e.target.value)}
+                    maxLength={80} className="workout-form__set-note-input" />}
                 </div>
                 <button onClick={() => removeSet(idx)} className="sets-list__remove" title="Remove set">✕</button>
               </div>

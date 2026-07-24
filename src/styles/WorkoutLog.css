@@ -34,7 +34,7 @@
   background: var(--c-surface);
   border: 1px solid var(--c-border);
   border-radius: var(--radius-lg);
-  padding: 12px 14px;
+  padding: 12px;
 }
 
 .workout-entry--deleting {
@@ -56,7 +56,7 @@
 .workout-entry__title-row {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 5px;
   margin-bottom: 7px;
   flex-wrap: wrap;
 }
@@ -68,15 +68,10 @@
 }
 
 .workout-entry__equipment {
-  font-size: 11px;
-  padding: 2px 8px;
+  padding: 0px 8px;
+  padding-top: 4px;
   border-radius: 99px;
-  font-weight: 500;
-}
 
-.workout-entry__muscle-group {
-  font-size: 11px;
-  color: var(--c-hint);
 }
 
 .workout-entry__equipment-type {
@@ -91,7 +86,7 @@
   flex-wrap: wrap;
   gap: 5px;
   margin-bottom: var(--sets-margin, 6px);
-  width: 110%;
+  width: 140%;
 }
 
 .workout-entry__set {

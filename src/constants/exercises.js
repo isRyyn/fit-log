@@ -15,7 +15,7 @@ export const CHEST_EXERCISES = [
     'Decline Bench Press',
     'Chest Fly',
     'Cable Crossover',
-    'Cable Low-to-High Fly',
+    'Low Cable Fly',
     'Chest Press'
 ];  
 
@@ -54,12 +54,13 @@ export const BACK_EXERCISES = [
     'Deadlift',
     'Bent-over Row',
     'Lat Pulldown',
-    'Reverse Grip Lat Pulldown',
+    'Reverse Lat Pulldown',
     'Seated Cable Row',
-    'Chest supported Seated Row',
+    'Chest supported Row',
     'T-Bar Row',
     'Face Pull',
-    'One arm row'
+    'One arm row',
+    'Lat Pullover',
 ];
 
 export const SHOULDER_EXERCISES = [
@@ -67,7 +68,8 @@ export const SHOULDER_EXERCISES = [
     'Lateral Raise',
     'Front Raise',
     'Rear Delt Fly',
-    'Shrugs'
+    'Shrugs',
+    'Upright Row',
 ];
 
 export const FOREARM_EXERCISES = [

@@ -11,7 +11,7 @@ export default defineConfig({
       manifest: {
         name: 'Fit Log',
         short_name: 'FitLog',
-        description: 'Track your daily workouts offline',
+        description: 'Manage your overall fitness journey with Fit Log',
         theme_color: '#0f0f10',
         background_color: '#0f0f10',
         display: 'standalone',
