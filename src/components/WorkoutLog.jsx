@@ -16,6 +16,10 @@ const EQ_COLOR = {
   Cable:      { bg:'rgba(127,119,221,0.12)',color:'#afa9ec', icon: PulleyIcon }
 };
 
+function formatDuration(mins, secs) {
+  return `${String(mins ?? 0).padStart(2,'0')}:${String(secs ?? 0).padStart(2,'0')}`;
+}
+
 export default function WorkoutLog({ workouts, onDelete, onEdit, onReorder, loading }) {
   const [deletingId, setDeletingId] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
@@ -46,10 +50,11 @@ export default function WorkoutLog({ workouts, onDelete, onEdit, onReorder, load
   return (
     <div className="workout-log">
       {workouts.map((w, idx) => {
-        const eq = EQ_COLOR[w.equipment] || EQ_COLOR.Other;
+        const eq = EQ_COLOR[w.equipment] || EQ_COLOR.Bodyweight;
         const deleting = deletingId === w.id;
         const isFirst = idx === 0;
         const isLast = idx === workouts.length - 1;
+        const isDuration = w.sets?.[0]?.type === 'duration' || w.sets?.[0]?.mins !== undefined;
 
         return (
           <div key={w.id} className={`workout-entry ${deleting ? 'workout-entry--deleting' : ''}`}>
@@ -80,18 +85,21 @@ export default function WorkoutLog({ workouts, onDelete, onEdit, onReorder, load
                 </div>
                 {w.equipmentType && <p className="workout-entry__equipment-type">{w.equipmentType}</p>}
                 <div className="workout-entry__sets" style={{ '--sets-margin': w.notes ? '6px' : 0 }}>
-                  {w.sets.map(s => (
-                    <span key={s.setNumber} className="workout-entry__set">
-                      {s.reps}×{s.weight ? `${s.weight}kg` : 'BW'}
+                  {w.sets.map((s, i) => (
+                    <span key={s.setNumber ?? i} className="workout-entry__set">
+                      {isDuration
+                        ? formatDuration(s.mins, s.secs)
+                        : `${s.reps}×${s.weight ? `${s.weight}kg` : 'BW'}`}
                       {s.note && <em className="workout-entry__set-note">{s.note}</em>}
                     </span>
                   ))}
                 </div>
-                {w.notes && 
-              <p className="workout-entry__notes">
-                <i class="fa-regular fa-clipboard"></i>
-                {w.notes}
-              </p>}
+                {w.notes && (
+                  <p className="workout-entry__notes">
+                    <i className="fa-regular fa-clipboard"></i>
+                    {w.notes}
+                  </p>
+                )}
               </div>
 
               <div className="workout__actions">

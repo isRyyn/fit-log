@@ -26,7 +26,6 @@
 .form-field__equipment-group {
   display: flex;
   gap: 7px;
-  flex-wrap: wrap;
   justify-content: space-between;
 }
 
@@ -54,6 +53,7 @@
   gap: 16px;
   flex-wrap: wrap;
   align-items: flex-end;
+  justify-content: space-between;
 }
 
 .counter {
@@ -66,7 +66,7 @@
 }
 
 .counter__btn {
-  width: 40px;
+  width: 35px;
   height: 30px;
   background: var(--c-surface2);
   border: none;
@@ -163,7 +163,7 @@
 
 .sets-list__edit-inline {
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   gap: 8px;
   width: 100%;
 }
@@ -183,6 +183,7 @@
   padding: 8px 4px;
   transition: transform 0.2s;
   flex-shrink: 0;
+  margin-top: 15px;
 }
 
 .sets-list__remove:hover {
@@ -221,4 +222,24 @@
 .workout-form__set-note-input::placeholder {
   color: var(--c-muted);
   opacity: 0.6;
+}
+
+.duration-input {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+ 
+.duration-input__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+ 
+.duration-input__sep {
+  font-size: 24px;
+  color: var(--c-muted);
+  padding-bottom: 4px;
+  font-weight: 300;
+  line-height: 1;
 }

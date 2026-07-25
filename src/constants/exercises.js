@@ -23,7 +23,8 @@ export const CORE_EXERCISES = [
     'Plank',
     'Crunches',
     'Hanging Leg Raise',
-    'Ab Coaster'
+    'Ab Coaster',
+    'L-Sit'
 ];
 
 export const LEG_EXERCISES = [

@@ -19,21 +19,34 @@ function computeVirtuals(workout) {
 
 function buildSets(body) {
   if (Array.isArray(body.sets)) {
-    return body.sets.map((s, i) => ({
-      setNumber: i + 1,
-      reps: Number(s.reps),
-      weight: s.weight != null ? Number(s.weight) : null,
-      unit: s.unit || 'kg',
-      note: s.note || '',
-    }));
+    return body.sets.map((s, i) => {
+      if (s.type === 'duration' || s.mins !== undefined) {
+        return {
+          setNumber: i + 1,
+          mins: s.mins ?? 0,
+          secs: s.secs ?? 0,
+          note: s.note || '',
+          type: 'duration',
+        };
+      }
+      return {
+        setNumber: i + 1,
+        reps: Number(s.reps),
+        weight: s.weight != null ? Number(s.weight) : null,
+        unit: s.unit || 'kg',
+        note: s.note || '',
+        type: 'reps',
+      };
+    });
   }
-  const count = parseInt(body.sets, 10);
-  return Array.from({ length: count }, (_, i) => ({
+  // fallback for legacy shape
+  return Array.from({ length: parseInt(body.sets, 10) }, (_, i) => ({
     setNumber: i + 1,
     reps: Number(body.reps),
     weight: body.weight != null ? Number(body.weight) : null,
     unit: body.unit || 'kg',
     note: '',
+    type: 'reps',
   }));
 }
 
