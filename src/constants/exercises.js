@@ -22,7 +22,8 @@ export const CHEST_EXERCISES = [
 export const CORE_EXERCISES = [
     'Plank',
     'Crunches',
-    'Hanging Leg Raise'
+    'Hanging Leg Raise',
+    'Ab Coaster'
 ];
 
 export const LEG_EXERCISES = [
@@ -80,5 +81,6 @@ export const FOREARM_EXERCISES = [
 export const CARDIO_EXERCISES = [
     'Running',
     'Cycling',
-    'Walking'
+    'Walking',
+    'Jumping Jack'
 ];
