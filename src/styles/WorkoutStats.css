@@ -1,7 +1,3 @@
-.workout-stats {
-  padding: 0 16px;
-}
-
 .workout-stats__loading {
   padding: 16px;
   font-size: 13px;
@@ -251,10 +247,13 @@
 .personal-records-label {
   margin-top: 15px;
   font-size: 14px;
+  display: flex;
+  justify-content: space-between;
 
   i {
     color: var(--c-accent);
     margin-left: 10px;
+    font-size: 18px;
   }
 }    
 

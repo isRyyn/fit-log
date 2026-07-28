@@ -154,7 +154,7 @@ export default function WeightTracker() {
       {/* History list */}
       {entries.length > 0 && (
         <div className="wt__list">
-          {[...entries].reverse().slice(0, 10).map(entry => (
+          {[...entries].reverse().slice(0, 5).map(entry => (
             <div key={entry.id} className="wt__entry">
               <span className="wt__entry-date">{formatDateFull(entry.date)}</span>
               <span className="wt__entry-weight">{entry.weight} kg</span>

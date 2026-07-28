@@ -83,7 +83,10 @@ export default function WorkoutLog({ workouts, onDelete, onEdit, onReorder, load
                     <HugeiconsIcon icon={eq.icon} size="15" />
                   </span>
                 </div>
-                {w.equipmentType && <p className="workout-entry__equipment-type">{w.equipmentType}</p>}
+                {w.equipmentType && <p className="workout-entry__equipment-type">
+                  <i class="fa-solid fa-paperclip"></i>
+                  {w.equipmentType}
+                  </p>}
                 <div className="workout-entry__sets" style={{ '--sets-margin': w.notes ? '6px' : 0 }}>
                   {w.sets.map((s, i) => (
                     <span key={s.setNumber ?? i} className="workout-entry__set">
@@ -96,7 +99,6 @@ export default function WorkoutLog({ workouts, onDelete, onEdit, onReorder, load
                 </div>
                 {w.notes && (
                   <p className="workout-entry__notes">
-                    <i className="fa-regular fa-clipboard"></i>
                     {w.notes}
                   </p>
                 )}

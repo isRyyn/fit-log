@@ -14,6 +14,9 @@ import { usePersonalRecords, PR_EXERCISES } from './hooks/usePersonalRecords.js'
 import ExerciseHistory from './components/ExerciseHistory.jsx';
 import './styles/App.css';
 import './styles/common.css';
+import { quantum } from 'ldrs';
+
+quantum.register();
 
 const TAB = { LOG: 'log', ADD: 'add', PROFILE: 'profile', HISTORY: 'history' };
 
@@ -48,7 +51,13 @@ export default function App() {
           <img src="/header-logo.png" alt="Fit Log" className="app__header-logo" />
         </header>
         <div className="app__content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <p>Loading...</p>
+          <l-quantum
+            size="40"
+            stroke="4"
+            bg-opacity="0"
+            speed="2"
+            color="#b8f53c"
+          />
         </div>
       </div>
     );
@@ -155,8 +164,6 @@ export default function App() {
                     'All workouts are synced to the cloud in real-time. Access them from any device.'}
                 </p>
               </div>
-              <WorkoutStats />
-
               {/* Body Weight — collapsible */}
               <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', margin:'20px 0 10px' }}>
                 <p style={{ fontSize:14, letterSpacing:'0.1em', textTransform:'uppercase', color:'var(--c-muted)', fontWeight:600, margin:0 }}>Body Weight</p>
@@ -167,7 +174,7 @@ export default function App() {
               <div className={`pr-collapse ${weightOpen ? 'pr-collapse--open' : ''}`}>
                 <WeightTracker />
               </div>
-
+              <WorkoutStats />
             </div>
           </div>
         )}

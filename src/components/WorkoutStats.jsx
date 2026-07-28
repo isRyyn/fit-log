@@ -65,9 +65,11 @@ export default function WorkoutStats() {
 
       {/* Personal Records */}
       <p className="workout-stats__section-label personal-records-label">
-        Personal Records
-        {!records && <i className="fa-solid fa-eye" onClick={() => setRecords(true)}></i>}
-        {records && <i className="fa-solid fa-eye-slash" onClick={() => setRecords(false)}></i>}
+        <p>Personal Records</p>
+        <div>
+            {!records && <i className="fa-solid fa-circle-chevron-down" onClick={() => setRecords(true)}></i>}
+            {records && <i className="fa-solid fa-circle-chevron-up" onClick={() => setRecords(false)}></i>}
+        </div>
         </p>
       <div className={`pr-collapse ${records ? 'pr-collapse--open' : ''}`}>
         <PersonalRecords />
