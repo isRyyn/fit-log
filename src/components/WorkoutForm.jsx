@@ -277,10 +277,10 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
           <label className="form-field__label">Sets ({setsList.length})</label>
           <div className="sets-list">
             {setsList.map((set, idx) => (
-              <div key={idx} className="sets-list__edit-inline">
+              <div key={idx} className="sets-list__edit-inline" style={{ alignItems: set.type === 'duration' ? 'center' : 'flex-start' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
                   {set.type === 'duration' ? (
-                    <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
+                    <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                       <div>
                         <Counter value={set.mins} min={0} max={99} onChange={val => updateSet(idx, 'mins', val)} />
                       </div>
@@ -297,7 +297,7 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
                       <div style={{ flex: 1 }}>
                         <input type="number" value={set.weight} onChange={e => updateSet(idx, 'weight', e.target.value)}
                           placeholder="(W)" min="0" step="2.5"
-                          disabled={isExerciseBodyweight} className="workout-form__weight-input" />
+                          className="workout-form__weight-input" />
                       </div>
 											{<input type="text" value={set.note || ''} onChange={e => updateSet(idx, 'note', e.target.value)}
                     maxLength={80} className="workout-form__set-note-input" />}

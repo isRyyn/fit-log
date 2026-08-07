@@ -9,7 +9,7 @@
   background: var(--c-surface);
   border: 1px solid var(--c-border);
   border-radius: var(--radius-md);
-  padding: 12px 10px;
+  padding: 5px 10px;
   text-align: center;
 }
 
