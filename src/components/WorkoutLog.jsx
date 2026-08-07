@@ -89,7 +89,7 @@ export default function WorkoutLog({ workouts, onDelete, onEdit, onReorder, load
                   </p>}
                 <div className="workout-entry__sets" style={{ '--sets-margin': w.notes ? '6px' : 0 }}>
                   {w.sets.map((s, i) => (
-                    <span key={s.setNumber ?? i} className="workout-entry__set">
+                    <span key={s.setNumber ?? i} className={`workout-entry__set ${s.isDropSet ? 'workout-entry__set--drop' : ''}`}>
                       {isDuration
                         ? formatDuration(s.mins, s.secs)
                         : `${s.reps}×${s.weight ? `${s.weight}kg` : 'BW'}`}

@@ -194,3 +194,19 @@
   opacity: 0.2;
   cursor: default;
 }
+
+/* ── Drop set badge in log ── */
+.workout-entry__set--drop {
+  border-color: rgba(224, 92, 122, 0.4);
+}
+
+.workout-entry__set-drop-badge {
+  display: block;
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 700;
+  color: #e05c7a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 1px;
+}

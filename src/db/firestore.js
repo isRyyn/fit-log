@@ -27,6 +27,7 @@ function buildSets(body) {
           secs: s.secs ?? 0,
           note: s.note || '',
           type: 'duration',
+          isDropSet: s.isDropSet || false,
         };
       }
       return {
@@ -36,6 +37,7 @@ function buildSets(body) {
         unit: s.unit || 'kg',
         note: s.note || '',
         type: 'reps',
+        isDropSet: s.isDropSet || false,
       };
     });
   }

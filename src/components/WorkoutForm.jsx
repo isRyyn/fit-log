@@ -71,7 +71,7 @@ function Counter({ value, min, max, onChange }) {
   return (
     <div className="counter">
       <button onClick={() => onChange(Math.max(min, value-1))} className="counter__btn">−</button>
-      <input type="number" className="counter__value" value={value} onChange={(e) => onChange(parseInt(e.target.value) || min)} />
+      <input type="number" className="counter__value" value={value} onChange={(e) => onChange(parseInt(e.target.value))} />
       <button onClick={() => onChange(Math.min(max, value+1))} className="counter__btn">+</button>
     </div>
   );
@@ -100,8 +100,8 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
   const [setsList, setSetsList] = useState(
     editingWorkout && Array.isArray(editingWorkout.sets)
       ? editingWorkout.sets.map(s => s.type === 'duration' || s.mins !== undefined
-          ? { mins: s.mins ?? 0, secs: s.secs ?? 0, note: s.note || '', type: 'duration' }
-          : { reps: s.reps, weight: s.weight?.toString() || '', unit: s.unit || 'kg', note: s.note || '', type: 'reps' })
+          ? { mins: s.mins ?? 0, secs: s.secs ?? 0, note: s.note || '', type: 'duration', isDropSet: s.isDropSet || false }
+          : { reps: s.reps, weight: s.weight?.toString() || '', unit: s.unit || 'kg', note: s.note || '', type: 'reps', isDropSet: s.isDropSet || false })
       : []
   );
   const [currentReps, setCurrentReps] = useState(12);
@@ -109,6 +109,7 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
   const [currentMins, setCurrentMins] = useState(1);
   const [currentSecs, setCurrentSecs] = useState(0);
   const [currentSetNote, setCurrentSetNote] = useState('');
+  const [isDropMode, setIsDropMode] = useState(false);
   const [notes, setNotes] = useState(editingWorkout?.notes || '');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -151,7 +152,7 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
         setExercise(''); setEquipment(''); setEquipmentType('');
         setCurrentReps(12); setCurrentWeight('');
         setCurrentMins(1); setCurrentSecs(0);
-        setCurrentSetNote(''); setSetsList([]); setNotes('');
+        setCurrentSetNote(''); setIsDropMode(false); setSetsList([]); setNotes('');
       }
     } catch(e) { setError(e.message); }
     finally { setSubmitting(false); }
@@ -161,12 +162,12 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
     if (isDurationExercise) {
       if (currentMins === 0 && currentSecs === 0) { setError('Enter a duration greater than 0.'); return; }
       setError('');
-      setSetsList([...setsList, { mins: currentMins, secs: currentSecs, note: currentSetNote, type: 'duration' }]);
+      setSetsList([...setsList, { mins: currentMins, secs: currentSecs, note: currentSetNote, type: 'duration', isDropSet: isDropMode }]);
       setCurrentMins(1); setCurrentSecs(0); setCurrentSetNote('');
     } else {
       if (!isExerciseBodyweight && !currentWeight) { setError('Enter weight before adding a set.'); return; }
       setError('');
-      setSetsList([...setsList, { reps: currentReps, weight: currentWeight, unit: 'kg', note: currentSetNote, type: 'reps' }]);
+      setSetsList([...setsList, { reps: currentReps, weight: currentWeight, unit: 'kg', note: currentSetNote, type: 'reps', isDropSet: isDropMode }]);
       setCurrentWeight(''); setCurrentReps(12); setCurrentSetNote('');
     }
   };
@@ -240,7 +241,18 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
 
       {/* Add Set */}
       <div className="form-field">
-        <label className="form-field__label">③ Add Set</label>
+        <div className='add-set-header'>
+            <label className="form-field__label">③ Add Set</label>
+            <div className="drop-mode-toggle-row">
+            <button
+                type="button"
+                onClick={() => setIsDropMode(d => !d)}
+                className={`drop-mode-toggle ${isDropMode ? 'drop-mode-toggle--active' : ''}`}
+            >
+                {isDropMode ? '🟡 Drop set' : 'Drop set'}
+            </button>
+            </div>
+        </div>
         {isDurationExercise ? (
           <div className="form-field__row">
             <DurationInput
@@ -277,7 +289,7 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
           <label className="form-field__label">Sets ({setsList.length})</label>
           <div className="sets-list">
             {setsList.map((set, idx) => (
-              <div key={idx} className="sets-list__edit-inline" style={{ alignItems: set.type === 'duration' ? 'center' : 'flex-start' }}>
+              <div key={idx} className={`sets-list__edit-inline ${set.isDropSet ? 'sets-list__edit-inline--drop' : ''}`} style={{ alignItems: set.type === 'duration' ? 'center' : 'flex-start' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
                   {set.type === 'duration' ? (
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
