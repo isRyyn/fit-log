@@ -29,8 +29,8 @@
   line-height: 1;
 }
 
-.wt__summary-value--up   { color: #e05c5c; }
-.wt__summary-value--down { color: #4caf7d; }
+.wt__summary-value--up   { color: #4caf7d; }
+.wt__summary-value--down { color: #e05c5c; }
 
 .wt__summary-label {
   font-size: 11px;

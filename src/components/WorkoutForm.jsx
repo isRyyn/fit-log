@@ -71,7 +71,7 @@ function Counter({ value, min, max, onChange }) {
   return (
     <div className="counter">
       <button onClick={() => onChange(Math.max(min, value-1))} className="counter__btn">−</button>
-      <input type="text" className="counter__value" value={value} onChange={(e) => onChange(parseInt(e.target.value) || min)} />
+      <input type="number" className="counter__value" value={value} onChange={(e) => onChange(parseInt(e.target.value) || min)} />
       <button onClick={() => onChange(Math.min(max, value+1))} className="counter__btn">+</button>
     </div>
   );
@@ -248,7 +248,7 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
               onMinsChange={setCurrentMins} onSecsChange={setCurrentSecs}
             />
 						<div>
-            	<button onClick={addSet} className="workout-form__add-set">+</button>
+            <button onClick={addSet} className="workout-form__add-set">+</button>
 						</div>	
           </div>
         ) : (
@@ -263,7 +263,7 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
                 placeholder="e.g. 20" min="0" step="2.5" className="workout-form__weight-input" />
             </div>
             <div>
-							<button onClick={addSet} className="workout-form__add-set">+</button>
+            <button onClick={addSet} className="workout-form__add-set">+</button>
 						</div>
           </div>
         )}
@@ -282,31 +282,27 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
                   {set.type === 'duration' ? (
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
                       <div>
-                        <div className="counter__label" style={{ fontSize: '11px' }}>Min</div>
                         <Counter value={set.mins} min={0} max={99} onChange={val => updateSet(idx, 'mins', val)} />
                       </div>
                       <span style={{ fontSize: 20, color: 'var(--c-muted)', paddingBottom: 1 }}>:</span>
                       <div>
-                        <div className="counter__label" style={{ fontSize: '11px' }}>Sec</div>
                         <Counter value={set.secs} min={0} max={59} onChange={val => updateSet(idx, 'secs', val)} />
                       </div>
                     </div>
                   ) : (
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                       <div>
-                        <div className="counter__label" style={{ fontSize: '11px' }}>Reps</div>
                         <Counter value={set.reps} min={1} max={100} onChange={(val) => updateSet(idx, 'reps', val)} />
                       </div>
                       <div style={{ flex: 1 }}>
-                        <div className="counter__label" style={{ fontSize: '11px' }}>Weight</div>
                         <input type="number" value={set.weight} onChange={e => updateSet(idx, 'weight', e.target.value)}
-                          placeholder={isExerciseBodyweight ? 'optional' : 'e.g. 20'} min="0" step="2.5"
+                          placeholder="(W)" min="0" step="2.5"
                           disabled={isExerciseBodyweight} className="workout-form__weight-input" />
                       </div>
+											{<input type="text" value={set.note || ''} onChange={e => updateSet(idx, 'note', e.target.value)}
+                    maxLength={80} className="workout-form__set-note-input" />}
                     </div>
                   )}
-                  {<input type="text" value={set.note || ''} onChange={e => updateSet(idx, 'note', e.target.value)}
-                    maxLength={80} className="workout-form__set-note-input" />}
                 </div>
                 <button onClick={() => removeSet(idx)} className="sets-list__remove" title="Remove set">✕</button>
               </div>
