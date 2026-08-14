@@ -2,9 +2,11 @@ import React, { useState, useMemo, useRef } from 'react';
 import Select from 'react-select';
 import { CHEST_EXERCISES, BACK_EXERCISES, CORE_EXERCISES, LEG_EXERCISES, TRICEP_EXERCISES, BICEP_EXERCISES, BODYWEIGHT_EXERCISES, SHOULDER_EXERCISES, FOREARM_EXERCISES, CARDIO_EXERCISES } from '../constants/exercises';
 import { useExerciseHistory } from '../hooks/useExerciseHistory.js';
+import { EQ_COLOR } from '../constants/equipment.js';
 import '../styles/WorkoutForm.css';
 import '../styles/ExerciseHistory.css';
 import '../styles/common.css';
+import { HugeiconsIcon } from '@hugeicons/react';
 
 const EXERCISES = {
   Bodyweight: BODYWEIGHT_EXERCISES,
@@ -43,6 +45,8 @@ function LastSession({ exercise, onViewAll, onRepeat }) {
   if (!history.length) return null;
   const last = history[0];
   const isDuration = last.sets?.[0]?.type === 'duration' || last.sets?.[0]?.mins !== undefined;
+  const eq = EQ_COLOR[last.equipment] || EQ_COLOR.Bodyweight;
+
   return (
     <div className="eh-inline">
       <div className="eh-inline__header">
@@ -51,11 +55,14 @@ function LastSession({ exercise, onViewAll, onRepeat }) {
       </div>
       <div className="eh-inline__sets">
         {last.sets.map((s, i) => (
-          <span key={i} className="eh-inline__set">
+          <span key={i} className={s.isDropSet ? 'eh-inline__set sets-list__edit-inline--drop' : 'eh-inline__set'}>
             {isDuration
               ? formatDuration(s.mins, s.secs)
               : `${s.reps}×${s.weight ? `${s.weight}kg` : 'BW'}`}
             {s.note && <em className="eh-inline__set-note">{s.note}</em>}
+            <span className="workout-entry__equipment" style={{ background: eq.bg, color: eq.color, padding: '2px 2px 0' }}>
+                <HugeiconsIcon icon={eq.icon} size="15" />
+            </span>
           </span>
         ))}
       </div>
