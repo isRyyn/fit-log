@@ -189,8 +189,8 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
 
   const handleRepeat = (sets) => {
     setSetsList(sets.map(s => s.type === 'duration' || s.mins !== undefined
-      ? { mins: s.mins ?? 0, secs: s.secs ?? 0, note: s.note || '', type: 'duration' }
-      : { reps: s.reps, weight: s.weight?.toString() || '', unit: s.unit || 'kg', note: s.note || '', type: 'reps' }
+      ? { mins: s.mins ?? 0, secs: s.secs ?? 0, note: s.note || '', type: 'duration', isDropSet: s.isDropSet || false }
+      : { reps: s.reps, weight: s.weight?.toString() || '', unit: s.unit || 'kg', note: s.note || '', type: 'reps', isDropSet: s.isDropSet || false }
     ));
   };
 
