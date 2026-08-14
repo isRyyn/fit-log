@@ -1,6 +1,9 @@
 import React from 'react';
 import { useExerciseHistory } from '../hooks/useExerciseHistory.js';
 import '../styles/ExerciseHistory.css';
+import '../styles/common.css';
+import { EQ_COLOR } from '../constants/equipment.js';
+import { HugeiconsIcon } from '@hugeicons/react';
 
 function formatDate(dateStr) {
   const d = new Date(dateStr);
@@ -8,6 +11,7 @@ function formatDate(dateStr) {
 }
 
 function SessionCard({ session, highlight }) {
+  const eq = EQ_COLOR[session.equipment] || EQ_COLOR.Bodyweight;
   return (
     <div className={`eh-card ${highlight ? 'eh-card--highlight' : ''}`}>
       <div className="eh-card__header">
@@ -17,9 +21,12 @@ function SessionCard({ session, highlight }) {
       </div>
       <div className="eh-card__sets">
         {session.sets.map((s, i) => (
-          <span key={i} className="eh-card__set">
+          <span key={i} className={s.isDropSet ? 'eh-card__set drop-set-highlight' : 'eh-card__set'}>
             {s.reps}×{s.weight ? `${s.weight}kg` : 'BW'}
             {s.note && <em className="eh-card__set-note">{s.note}</em>}
+            <span style={{ background: eq.bg, color: eq.color }} className='eh-card__icon'>
+              <HugeiconsIcon icon={eq.icon} size="15" />
+            </span>
           </span>
         ))}
       </div>

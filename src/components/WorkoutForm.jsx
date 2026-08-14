@@ -55,12 +55,12 @@ function LastSession({ exercise, onViewAll, onRepeat }) {
       </div>
       <div className="eh-inline__sets">
         {last.sets.map((s, i) => (
-          <span key={i} className={s.isDropSet ? 'eh-inline__set sets-list__edit-inline--drop' : 'eh-inline__set'}>
+          <span key={i} className={s.isDropSet ? 'eh-inline__set drop-set-highlight' : 'eh-inline__set'}>
             {isDuration
               ? formatDuration(s.mins, s.secs)
               : `${s.reps}×${s.weight ? `${s.weight}kg` : 'BW'}`}
             {s.note && <em className="eh-inline__set-note">{s.note}</em>}
-            <span className="workout-entry__equipment" style={{ background: eq.bg, color: eq.color, padding: '2px 2px 0' }}>
+            <span className="eh-card__icon" style={{ background: eq.bg, color: eq.color }}>
                 <HugeiconsIcon icon={eq.icon} size="15" />
             </span>
           </span>
@@ -256,7 +256,7 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
                 onClick={() => setIsDropMode(d => !d)}
                 className={`drop-mode-toggle ${isDropMode ? 'drop-mode-toggle--active' : ''}`}
             >
-                {isDropMode ? '🟡 Drop set' : 'Drop set'}
+                {isDropMode ? '🔴 Drop set' : 'Drop set'}
             </button>
             </div>
         </div>
@@ -296,7 +296,7 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
           <label className="form-field__label">Sets ({setsList.length})</label>
           <div className="sets-list">
             {setsList.map((set, idx) => (
-              <div key={idx} className={`sets-list__edit-inline ${set.isDropSet ? 'sets-list__edit-inline--drop' : ''}`} style={{ alignItems: set.type === 'duration' ? 'center' : 'flex-start' }}>
+              <div key={idx} className={`sets-list__edit-inline ${set.isDropSet ? 'drop-set-highlight' : ''}`} style={{ alignItems: set.type === 'duration' ? 'center' : 'flex-start' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: 1 }}>
                   {set.type === 'duration' ? (
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>

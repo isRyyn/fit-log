@@ -71,3 +71,9 @@
 .modal-btn--confirm:hover {
   background: var(--c-danger-hover);
 }
+
+.drop-set-highlight {
+  border: 1px solid #ff3737 !important;
+  border-radius: var(--radius-md);
+  padding: 5px;
+}
