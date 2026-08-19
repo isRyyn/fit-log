@@ -2,6 +2,16 @@ import { useState, useEffect } from 'react';
 import { WorkoutDB } from '../db/firestore.js';
 import { useAuth } from './useAuth.jsx';
 
+export function calcExerciseVolume(sets) {
+  return sets.reduce((total, s) => {
+    if (s.type === 'duration' || s.mins !== undefined) return total;
+    const w = parseFloat(s.weight);
+    const r = parseInt(s.reps);
+    if (!w || !r) return total;
+    return total + w * r;
+  }, 0);
+}
+
 function computeStats(workouts) {
   const today = new Date();
   const year = today.getFullYear();
@@ -71,6 +81,17 @@ function computeStats(workouts) {
   }
   const titleSummary = Object.entries(categoryCounts).sort((a, b) => b[1] - a[1]);
 
+  // Volume per session — group by date, sum across exercises, skip duration
+  const volumeMap = {};
+  for (const w of workouts) {
+    const vol = calcExerciseVolume(w.sets || []);
+    if (vol > 0) volumeMap[w.date] = (volumeMap[w.date] || 0) + vol;
+  }
+  const volumeBySession = Object.entries(volumeMap)
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .slice(-30)
+    .map(([date, volume]) => ({ date, volume: Math.round(volume) }));
+
   return {
     daysThisMonth: thisMonthDays.length,
     currentStreak,
@@ -79,6 +100,7 @@ function computeStats(workouts) {
     daysOnBreak,
     titleSummary,
     allActiveDays,
+    volumeBySession,
   };
 }
 

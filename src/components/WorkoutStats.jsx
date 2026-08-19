@@ -1,10 +1,32 @@
 import React, { useState } from 'react';
 import { useWorkoutStats } from '../hooks/useWorkoutStats.js';
 import PersonalRecords from './PersonalRecords.jsx';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import '../styles/WorkoutStats.css';
 
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAY_LABELS = ['S','M','T','W','T','F','S'];
+
+function formatDate(dateStr) {
+  const [, m, d] = dateStr.split('-');
+  return `${d}/${m}`;
+}
+
+function formatDateFull(dateStr) {
+  const [y, m, d] = dateStr.split('-');
+  return `${d}/${m}/${y}`;
+}
+
+const VolumeTooltip = ({ active, payload }) => {
+  if (!active || !payload?.length) return null;
+  const { date, volume } = payload[0].payload;
+  return (
+    <div className="wt-tooltip">
+      <span className="wt-tooltip__date">{formatDateFull(date)}</span>
+      <span className="wt-tooltip__weight">{volume.toLocaleString()} kg</span>
+    </div>
+  );
+};
 
 function Heatmap({ allActiveDays, year, month }) {
   const today = new Date();
@@ -38,7 +60,7 @@ function Heatmap({ allActiveDays, year, month }) {
 
 export default function WorkoutStats() {
   const { stats, loading } = useWorkoutStats();
-  const [ records, setRecords ] = useState(false);
+  const [records, setRecords] = useState(false);
   const now = new Date();
   const [heatmapYear, setHeatmapYear] = useState(now.getFullYear());
   const [heatmapMonth, setHeatmapMonth] = useState(now.getMonth());
@@ -60,6 +82,11 @@ export default function WorkoutStats() {
   if (loading) return <div className="workout-stats__loading">Loading stats…</div>;
   if (!stats) return null;
 
+  const maxVolume = stats.volumeBySession.length
+    ? Math.max(...stats.volumeBySession.map(v => v.volume))
+    : 0;
+  const yMax = Math.ceil(maxVolume / 1000) * 1000 + 500;
+
   return (
     <div className="workout-stats">
 
@@ -67,10 +94,10 @@ export default function WorkoutStats() {
       <p className="workout-stats__section-label personal-records-label">
         <p>Personal Records</p>
         <div>
-            {!records && <i className="fa-solid fa-circle-chevron-down" onClick={() => setRecords(true)}></i>}
-            {records && <i className="fa-solid fa-circle-chevron-up" onClick={() => setRecords(false)}></i>}
+          {!records && <i className="fa-solid fa-circle-chevron-down" onClick={() => setRecords(true)}></i>}
+          {records && <i className="fa-solid fa-circle-chevron-up" onClick={() => setRecords(false)}></i>}
         </div>
-        </p>
+      </p>
       <div className={`pr-collapse ${records ? 'pr-collapse--open' : ''}`}>
         <PersonalRecords />
       </div>
@@ -108,6 +135,44 @@ export default function WorkoutStats() {
             ))}
           </div>
         </div>
+      )}
+
+      {/* Volume trend chart */}
+      {stats.volumeBySession.length >= 2 && (
+        <>
+          <p className="workout-stats__section-label" style={{ marginTop: 20 }}>Volume Trend</p>
+          <div className="volume-chart">
+            <ResponsiveContainer width="100%" height={180}>
+              <LineChart data={stats.volumeBySession} margin={{ top: 8, right: 8, bottom: 0, left: -10 }}>
+                <XAxis
+                  dataKey="date"
+                  tickFormatter={formatDate}
+                  tick={{ fontSize: 11, fill: 'var(--c-muted)' }}
+                  tickLine={false}
+                  axisLine={false}
+                  interval="preserveStartEnd"
+                />
+                <YAxis
+                  domain={[0, yMax]}
+                  tick={{ fontSize: 11, fill: 'var(--c-muted)' }}
+                  tickLine={false}
+                  axisLine={false}
+                  tickCount={4}
+                  tickFormatter={v => v >= 1000 ? `${v/1000}t` : v}
+                />
+                <Tooltip content={<VolumeTooltip />} />
+                <Line
+                  type="monotone"
+                  dataKey="volume"
+                  stroke="var(--c-accent)"
+                  strokeWidth={2}
+                  dot={{ r: 3, fill: 'var(--c-accent)', strokeWidth: 0 }}
+                  activeDot={{ r: 5 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </>
       )}
 
       {/* Heatmap with navigation */}

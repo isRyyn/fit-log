@@ -106,7 +106,7 @@ export default function App() {
         {tab === TAB.LOG && (
           <>
             <DatePicker date={date} onChange={setDate} />
-            <StatsBar stats={stats} />
+            <StatsBar stats={stats} workouts={workouts}/>
             {error && (
               <div className="app__error-banner">
                 ⚠ {error}

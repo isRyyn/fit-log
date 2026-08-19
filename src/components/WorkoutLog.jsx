@@ -3,7 +3,7 @@ import '../styles/WorkoutLog.css';
 import '../styles/common.css';
 import { HugeiconsIcon } from '@hugeicons/react';
 import { EQ_COLOR } from '../constants/equipment';
-
+import { calcExerciseVolume } from '../hooks/useWorkoutStats.js';
 
 function formatDuration(mins, secs) {
   return `${String(mins ?? 0).padStart(2,'0')}:${String(secs ?? 0).padStart(2,'0')}`;
@@ -44,6 +44,7 @@ export default function WorkoutLog({ workouts, onDelete, onEdit, onReorder, load
         const isFirst = idx === 0;
         const isLast = idx === workouts.length - 1;
         const isDuration = w.sets?.[0]?.type === 'duration' || w.sets?.[0]?.mins !== undefined;
+        const volume = calcExerciseVolume(w.sets || []);
 
         return (
           <div key={w.id} className={`workout-entry ${deleting ? 'workout-entry--deleting' : ''}`}>
@@ -72,10 +73,12 @@ export default function WorkoutLog({ workouts, onDelete, onEdit, onReorder, load
                     <HugeiconsIcon icon={eq.icon} size="15" />
                   </span>
                 </div>
-                {w.equipmentType && <p className="workout-entry__equipment-type">
-                  <i class="fa-solid fa-paperclip"></i>
-                  {w.equipmentType}
-                  </p>}
+                {w.equipmentType && (
+                  <p className="workout-entry__equipment-type">
+                    <i className="fa-solid fa-paperclip"></i>
+                    {w.equipmentType}
+                  </p>
+                )}
                 <div className="workout-entry__sets" style={{ '--sets-margin': w.notes ? '6px' : 0 }}>
                   {w.sets.map((s, i) => (
                     <span key={s.setNumber ?? i} className={`workout-entry__set ${s.isDropSet ? 'workout-entry__set--drop' : ''}`}>
@@ -86,10 +89,14 @@ export default function WorkoutLog({ workouts, onDelete, onEdit, onReorder, load
                     </span>
                   ))}
                 </div>
-                {w.notes && (
-                  <p className="workout-entry__notes">
-                    {w.notes}
+                {volume > 0 && (
+                  <p className="workout-entry__volume">
+                    <i className="fa-solid fa-weight-hanging" style={{ marginRight: 5, opacity: 0.5 }}></i>
+                    {Math.round(volume).toLocaleString()} kg
                   </p>
+                )}
+                {w.notes && (
+                  <p className="workout-entry__notes">{w.notes}</p>
                 )}
               </div>
 
