@@ -12,13 +12,14 @@ import DayTitle from './components/DayTitle.jsx';
 import PRToast from './components/PRToast.jsx';
 import { usePersonalRecords, PR_EXERCISES } from './hooks/usePersonalRecords.js';
 import ExerciseHistory from './components/ExerciseHistory.jsx';
+import WorkoutSearch from './components/WorkoutSearch.jsx';
 import './styles/App.css';
 import './styles/common.css';
 import { quantum } from 'ldrs';
 
 quantum.register();
 
-const TAB = { LOG: 'log', ADD: 'add', PROFILE: 'profile', HISTORY: 'history' };
+const TAB = { LOG: 'log', ADD: 'add', PROFILE: 'profile', HISTORY: 'history', SEARCH: 'search' };
 
 export default function App() {
   const { user, logout, isAuthenticated, loading: authLoading } = useAuth();
@@ -83,6 +84,9 @@ export default function App() {
       {/* Header */}
       <header className="app__header">
         <img src="/header-logo.png" alt="Fit Log" className="app__header-logo" />
+        <button onClick={() => setTab(TAB.SEARCH)} className="app__header-search-btn" title="Search">
+          <i className="fa-solid fa-magnifying-glass" />
+        </button>
         <div className="app__header-menu-wrapper" ref={menuRef}>
           <button onClick={() => setShowMenu(!showMenu)} className="app__header-menu-btn" title="Menu">
             ⋯
@@ -179,6 +183,10 @@ export default function App() {
           </div>
         )}
       </div>
+
+      {tab === TAB.SEARCH && (
+        <WorkoutSearch onBack={() => setTab(TAB.LOG)} onNavigate={(date) => { setDate(date); setTab(TAB.LOG); }} />
+      )}
 
       {tab === TAB.HISTORY && (
         <ExerciseHistory exerciseName={historyExercise} onBack={() => { setTab(TAB.ADD); }} />

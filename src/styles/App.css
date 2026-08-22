@@ -174,3 +174,20 @@
   font-size: 13px;
   color: var(--c-danger);
 }
+
+.app__header-search-btn {
+  background: none;
+  border: none;
+  color: var(--c-muted);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-md);
+  transition: color 0.15s;
+}
+
+.app__header-search-btn:hover {
+  color: var(--c-text);
+}
