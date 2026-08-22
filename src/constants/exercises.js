@@ -69,6 +69,8 @@ export const BACK_EXERCISES = [
 
 export const SHOULDER_EXERCISES = [
     'Overhead Press',
+    'Machine Shoulder Press',
+    'Smith Machine Shoulder Press',
     'Lateral Raise',
     'Front Raise',
     'Rear Delt Fly',
