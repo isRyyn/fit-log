@@ -91,13 +91,13 @@ export default function WorkoutStats() {
     <div className="workout-stats">
 
       {/* Personal Records */}
-      <p className="workout-stats__section-label personal-records-label">
+      <div className="workout-stats__section-label personal-records-label">
         <p>Personal Records</p>
         <div>
           {!records && <i className="fa-solid fa-circle-chevron-down" onClick={() => setRecords(true)}></i>}
           {records && <i className="fa-solid fa-circle-chevron-up" onClick={() => setRecords(false)}></i>}
         </div>
-      </p>
+      </div>
       <div className={`pr-collapse ${records ? 'pr-collapse--open' : ''}`}>
         <PersonalRecords />
       </div>

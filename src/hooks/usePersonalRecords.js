@@ -25,21 +25,28 @@ export function usePersonalRecords() {
 
   const saveRecord = useCallback(async (exercise, weight, reps, date) => {
     if (!docId) return;
+    // Always read latest from Firestore before writing to avoid race condition
+    // overwriting other PRs with stale local state
+    const snap = await getDoc(doc(db, 'personalRecords', docId));
+    const latest = snap.exists() ? snap.data().records || {} : {};
     const updated = {
-      ...records,
+      ...latest,
       [exercise]: { weight: parseFloat(weight), reps: parseInt(reps), date },
     };
     await setDoc(doc(db, 'personalRecords', docId), { userId: user.uid, records: updated });
     setRecords(updated);
-  }, [docId, records, user]);
+  }, [docId, user]);
 
   const clearRecord = useCallback(async (exercise) => {
     if (!docId) return;
-    const updated = { ...records };
+    // Same — read latest before clearing to avoid wiping other PRs
+    const snap = await getDoc(doc(db, 'personalRecords', docId));
+    const latest = snap.exists() ? snap.data().records || {} : {};
+    const updated = { ...latest };
     delete updated[exercise];
     await setDoc(doc(db, 'personalRecords', docId), { userId: user.uid, records: updated });
     setRecords(updated);
-  }, [docId, records, user]);
+  }, [docId, user]);
 
   return { records, loading, saveRecord, clearRecord };
 }
