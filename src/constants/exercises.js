@@ -37,7 +37,8 @@ export const LEG_EXERCISES = [
     'Hip Adduction',
     'Sumo Squat',
     'Romanian Deadlift',
-    'Lunges'
+    'Lunges',
+    'Hack Squat'
 ];
 
 export const BICEP_EXERCISES = [
