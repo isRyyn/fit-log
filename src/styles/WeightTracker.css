@@ -74,8 +74,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: 5px;
 }
 
 .wt__add-field {
@@ -98,6 +97,11 @@
     padding: 8px 10px !important;
     width: 90px !important;
     outline: none !important;
+}
+
+.wt__input-small {
+    width: 52px !important;
+    height: 37px;;
 }
 
 .wt__input--date { width: 125px !important; font-size: 13px; }
