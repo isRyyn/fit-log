@@ -44,7 +44,9 @@ export const LEG_EXERCISES = [
 export const BICEP_EXERCISES = [
     'Bicep Curl',
     'Hammer Curl',
-    'Preacher Curl'
+    'Preacher Curl',
+    'Incline Dumbbell Curl',
+    'Concentration Curl'
 ];
 
 export const TRICEP_EXERCISES = [
