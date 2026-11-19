@@ -83,7 +83,9 @@ export const SHOULDER_EXERCISES = [
 
 export const FOREARM_EXERCISES = [
     'Wrist Curl',
-    'Reverse Wrist Curl'
+    'Reverse Wrist Curl',
+    'Forearm Curl',
+    'Wrist side curl'
 ];
 
 export const CARDIO_EXERCISES = [

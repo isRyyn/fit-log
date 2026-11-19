@@ -307,6 +307,8 @@ export default function WorkoutForm({ date, onAdd, editingWorkout, onUpdate, onV
                       <div>
                         <Counter value={set.secs} min={0} max={59} onChange={val => updateSet(idx, 'secs', val)} />
                       </div>
+                      {<input type="text" value={set.note || ''} onChange={e => updateSet(idx, 'note', e.target.value)}
+                    maxLength={80} className="workout-form__set-note-input" />}
                     </div>
                   ) : (
                     <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
